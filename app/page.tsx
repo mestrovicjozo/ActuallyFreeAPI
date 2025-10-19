@@ -18,8 +18,9 @@ export default function Home() {
               Get Started
             </a>
             <a
-              href="/api/README.md"
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
               target="_blank"
+              rel="noopener noreferrer"
               className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
             >
               View Documentation
@@ -173,10 +174,21 @@ export default function Home() {
           <p>Built with Next.js and Supabase. Deployed on Vercel.</p>
           <p className="mt-2">
             <a
-              href="https://github.com"
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               View on GitHub
+            </a>
+            {' • '}
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI/blob/main/CONTRIBUTING.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Contributing
             </a>
           </p>
         </div>
