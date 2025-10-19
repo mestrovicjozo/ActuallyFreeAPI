@@ -8,10 +8,10 @@ export interface RSSFeed {
 export const RSS_FEEDS: RSSFeed[] = [
   // Reuters
   {
-    name: 'Reuters Business',
-    url: 'https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best',
+    name: 'Reuters World News',
+    url: 'http://feeds.reuters.com/Reuters/worldNews',
     category: 'general',
-    description: 'Reuters business and financial news',
+    description: 'Reuters world and business news',
   },
 
   // Yahoo Finance
@@ -102,24 +102,24 @@ export const RSS_FEEDS: RSSFeed[] = [
 
   // Forbes
   {
-    name: 'Forbes Money',
-    url: 'https://www.forbes.com/money/feed/',
-    category: 'general',
-    description: 'Forbes money and finance',
+    name: 'Forbes Business',
+    url: 'https://www.forbes.com/business/feed/',
+    category: 'business',
+    description: 'Forbes business news',
   },
   {
-    name: 'Forbes Investing',
-    url: 'https://www.forbes.com/investing/feed/',
-    category: 'investing',
-    description: 'Forbes investing insights',
+    name: 'Forbes Innovation',
+    url: 'https://www.forbes.com/innovation/feed2/',
+    category: 'technology',
+    description: 'Forbes innovation and technology',
   },
 
-  // Barron's
+  // Business Insider (replacing Barron's which requires auth)
   {
-    name: "Barron's Market News",
-    url: 'https://www.barrons.com/rss',
+    name: 'Business Insider Markets',
+    url: 'https://markets.businessinsider.com/rss/news',
     category: 'markets',
-    description: "Barron's market analysis",
+    description: 'Business Insider market news',
   },
 
   // Investor's Business Daily
@@ -154,10 +154,10 @@ export const RSS_FEEDS: RSSFeed[] = [
     description: 'Economic and financial analysis',
   },
 
-  // Investopedia
+  // Investopedia (updated URL)
   {
-    name: 'Investopedia Markets',
-    url: 'https://www.investopedia.com/feedbuilder/feed/getfeed?feedName=rss_headline',
+    name: 'Investopedia News',
+    url: 'https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_news',
     category: 'education',
     description: 'Financial education and market news',
   },
