@@ -1,134 +1,37 @@
 # Free Financial News API
 
-A completely free REST API that aggregates financial news from 25+ major RSS feeds. Built with Next.js, Supabase, and deployed on Vercel.
+A completely free REST API that aggregates financial news from 21+ major RSS feeds. No setup required - just start using it!
 
-## Features
+## 🚀 Quick Start
+
+**Base URL:** `https://your-domain.vercel.app`
+
+Just make HTTP requests - no API keys, no authentication, no limits!
+
+```bash
+# Get latest financial news
+curl "https://your-domain.vercel.app/api/news"
+
+# Search for specific stocks
+curl "https://your-domain.vercel.app/api/news?search=AAPL"
+
+# Get news from specific sources
+curl "https://your-domain.vercel.app/api/news?source=Bloomberg%20Markets"
+
+# Filter by date range
+curl "https://your-domain.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31"
+```
+
+## ✨ Features
 
 - **100% Free** - No API keys, no rate limits, no credit card required
-- **25+ News Sources** - Aggregates from Reuters, Bloomberg, CNBC, WSJ, Financial Times, and more
+- **21+ News Sources** - Reuters, Bloomberg, CNBC, WSJ, Financial Times, Yahoo Finance, and more
 - **30-Day History** - Access up to a month of historical financial news
-- **Powerful Filtering** - Filter by date range, source, and search keywords/stock symbols
-- **Daily Updates** - Automatically fetches new articles daily via Vercel Cron (free tier)
-- **Pagination Support** - Efficient pagination for large result sets
-- **Full-Text Search** - Search across article titles and descriptions
-
-## Tech Stack
-
-- **Frontend/Backend**: Next.js 15 with App Router
-- **Database**: Supabase (PostgreSQL)
-- **RSS Parsing**: rss-parser
-- **Deployment**: Vercel
-- **Cron Jobs**: Vercel Cron
-- **Language**: TypeScript
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+ installed
-- A Supabase account (free tier)
-- A Vercel account (free tier)
-- Git
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/ActuallyFreeAPI.git
-cd ActuallyFreeAPI
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Set Up Supabase
-
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Go to the SQL Editor in your Supabase dashboard
-3. Copy and paste the contents of `database/schema.sql` and run it
-4. Get your project URL and anon key from Settings > API
-
-### 4. Configure Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-CRON_SECRET=your_random_secret_key
-```
-
-Generate a random secret for `CRON_SECRET`:
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-### 5. Run Locally
-
-```bash
-npm run dev
-```
-
-Visit `http://localhost:3000` to see the landing page.
-
-### 6. Test the API Locally
-
-```bash
-# Get latest news
-curl "http://localhost:3000/api/news"
-
-# Search for a stock
-curl "http://localhost:3000/api/news?search=AAPL"
-
-# Get sources
-curl "http://localhost:3000/api/sources"
-
-# Get stats
-curl "http://localhost:3000/api/stats"
-```
-
-### 7. Manually Trigger RSS Fetch (for testing)
-
-```bash
-curl -X POST "http://localhost:3000/api/cron/fetch-rss" \
-  -H "Authorization: Bearer your_cron_secret"
-```
-
-## Deployment to Vercel
-
-### 1. Push to GitHub
-
-```bash
-git add .
-git commit -m "Initial commit"
-git push origin main
-```
-
-### 2. Deploy to Vercel
-
-1. Go to [vercel.com](https://vercel.com) and sign in
-2. Click "New Project"
-3. Import your GitHub repository
-4. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `CRON_SECRET`
-5. Click "Deploy"
-
-### 3. Verify Cron Job
-
-1. After deployment, go to your Vercel project dashboard
-2. Navigate to the "Cron Jobs" tab
-3. You should see the `fetch-rss` job scheduled to run every hour
-4. Click "Run" to test it manually
-
-### 4. Update Domain References
-
-After deployment, update the example URLs in:
-- `app/page.tsx` (replace `your-domain.vercel.app` with your actual domain)
-- `app/api/README.md` (update all example URLs)
+- **Powerful Search** - Search by keywords, stock symbols (AAPL, TSLA, etc.)
+- **Date Filtering** - Get news from specific date ranges
+- **Source Filtering** - Filter by specific news outlets
+- **Pagination** - Efficient pagination for large result sets
+- **Daily Updates** - Automatically updated daily with fresh articles
 
 ## API Documentation
 
@@ -197,153 +100,46 @@ ActuallyFreeAPI/
 └── README.md                 # This file
 ```
 
-## Configuration
+## 📰 News Sources
 
-### Adding New RSS Feeds
+The API aggregates from 21+ major financial news outlets:
 
-Edit `config/rss-feeds.ts` and add your feed to the `RSS_FEEDS` array:
+- **Reuters**, **Yahoo Finance**, **MarketWatch**
+- **Bloomberg** (Markets & Technology)
+- **CNBC** (Top News, Markets, Investing)
+- **Wall Street Journal** (Markets & Business)
+- **Financial Times**, **Forbes** (Business & Innovation)
+- **Business Insider**, **Seeking Alpha**, **IBD**
+- **Motley Fool**, **Benzinga**, **The Economist**
+- **Investopedia**
 
-```typescript
-{
-  name: 'Your Feed Name',
-  url: 'https://example.com/feed.xml',
-  category: 'general',
-  description: 'Description of the feed',
-}
-```
+View complete list: `GET /api/sources`
 
-### Changing Cron Schedule
+## 🛠️ Self-Hosting
 
-The default schedule runs once daily (compatible with Vercel free tier):
+Want to run your own instance? See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed setup instructions.
 
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/fetch-rss",
-      "schedule": "0 0 * * *"  // Once daily at midnight UTC
-    }
-  ]
-}
-```
+## 🤝 Contributing
 
-**Note**: Vercel's free Hobby plan only supports daily cron jobs.
+Want to help improve this API? Check out [CONTRIBUTING.md](CONTRIBUTING.md)!
 
-For more frequent updates (requires Vercel Pro plan):
-- `0 * * * *` - Every hour
-- `0 */2 * * *` - Every 2 hours
-- `0 */6 * * *` - Every 6 hours
-- `0 0 * * *` - Once daily at midnight (FREE)
-
-### Adjusting Data Retention
-
-The database automatically deletes articles older than 30 days. To change this:
-
-1. Edit `database/schema.sql` - modify the `delete_old_articles()` function
-2. Edit `app/api/cron/fetch-rss/route.ts` - adjust the cleanup logic
-
-## News Sources
-
-The API aggregates news from 25+ major financial outlets:
-
-- **General**: Reuters, Yahoo Finance, CNBC, Forbes, Benzinga
-- **Markets**: MarketWatch, Bloomberg, WSJ, FT, Barron's
-- **Stocks**: Seeking Alpha, Investor's Business Daily
-- **Investing**: Forbes Investing, Motley Fool
-- **Economics**: The Economist
-- **Education**: Investopedia
-
-See the full list at `/api/sources` or in `config/rss-feeds.ts`.
-
-## Monitoring & Maintenance
-
-### View Logs
-
-Check Vercel logs to monitor the cron job:
-1. Go to your Vercel project dashboard
-2. Click "Logs"
-3. Filter by function name
-
-### Check Database Size
-
-Monitor your Supabase database usage:
-1. Go to Supabase dashboard
-2. Navigate to Settings > Database
-3. Check storage usage (free tier: 500 MB)
-
-### Troubleshooting
-
-**Problem**: Cron job not running
-- Verify `vercel.json` is in the project root
-- Check Vercel dashboard > Cron Jobs tab
-- Ensure environment variables are set correctly
-
-**Problem**: No articles in database
-- Manually trigger the cron job from Vercel dashboard
-- Check logs for errors
-- Verify Supabase credentials are correct
-
-**Problem**: RSS feeds failing
-- Some feeds may be temporarily unavailable
-- Check `app/api/cron/fetch-rss/route.ts` logs
-- Verify feed URLs in `config/rss-feeds.ts`
-
-## Development
-
-### Run Development Server
-
-```bash
-npm run dev
-```
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-### Run Linter
-
-```bash
-npm run lint
-```
-
-### Type Checking
-
-```bash
-npx tsc --noEmit
-```
-
-## Contributing
-
-Contributions are welcome! Here are some ideas:
-
+Ideas for contributions:
 - Add more RSS feeds
 - Improve search functionality
 - Add sentiment analysis
-- Create additional filtering options
-- Improve documentation
-- Add rate limiting
 - Create SDKs for different languages
+- Improve documentation
 
-## License
+## 📄 License
 
-MIT License - feel free to use this project for personal or commercial purposes.
+MIT License - Free to use for personal and commercial projects.
 
-## Acknowledgments
+## ⭐ Support
 
-- Built with [Next.js](https://nextjs.org/)
-- Database powered by [Supabase](https://supabase.com)
-- Deployed on [Vercel](https://vercel.com)
-- RSS parsing by [rss-parser](https://github.com/rbren/rss-parser)
-
-## Support
-
-For questions, issues, or feature requests:
-- Open an issue on GitHub
-- Check the documentation in `/app/api/README.md`
-- Review the database setup guide in `/database/README.md`
+- Give this repo a star if you find it useful!
+- Share with others who might need financial news data
+- [Report issues](https://github.com/mestrovicjozo/ActuallyFreeAPI/issues) if you find bugs
 
 ---
 
-**Built with Claude Code** - Making financial news accessible to everyone.
+**Making financial news accessible to everyone** - No barriers, no costs, just data.
