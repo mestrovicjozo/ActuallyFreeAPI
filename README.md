@@ -4,22 +4,22 @@ A completely free REST API that aggregates financial news from 21+ major RSS fee
 
 ## 🚀 Quick Start
 
-**Base URL:** `https://your-domain.vercel.app`
+**Base URL:** `https://actually-free-api.vercel.app`
 
 Just make HTTP requests - no API keys, no authentication, no limits!
 
 ```bash
 # Get latest financial news
-curl "https://your-domain.vercel.app/api/news"
+curl "https://actually-free-api.vercel.app/api/news"
 
 # Search for specific stocks
-curl "https://your-domain.vercel.app/api/news?search=AAPL"
+curl "https://actually-free-api.vercel.app/api/news?search=AAPL"
 
 # Get news from specific sources
-curl "https://your-domain.vercel.app/api/news?source=Bloomberg%20Markets"
+curl "https://actually-free-api.vercel.app/api/news?source=Bloomberg%20Markets"
 
 # Filter by date range
-curl "https://your-domain.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31"
+curl "https://actually-free-api.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31"
 ```
 
 ## ✨ Features
@@ -51,7 +51,7 @@ Fetch news articles with optional filtering.
 
 **Example:**
 ```bash
-curl "https://your-domain.vercel.app/api/news?search=TSLA&limit=10"
+curl "https://actually-free-api.vercel.app/api/news?search=TSLA&limit=10"
 ```
 
 #### GET /api/sources
@@ -60,7 +60,7 @@ Get list of all RSS feed sources.
 
 **Example:**
 ```bash
-curl "https://your-domain.vercel.app/api/sources"
+curl "https://actually-free-api.vercel.app/api/sources"
 ```
 
 #### GET /api/stats
@@ -69,7 +69,7 @@ Get API statistics and database information.
 
 **Example:**
 ```bash
-curl "https://your-domain.vercel.app/api/stats"
+curl "https://actually-free-api.vercel.app/api/stats"
 ```
 
 See `/app/api/README.md` for complete API documentation with examples in multiple languages.
