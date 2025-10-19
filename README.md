@@ -8,7 +8,7 @@ A completely free REST API that aggregates financial news from 25+ major RSS fee
 - **25+ News Sources** - Aggregates from Reuters, Bloomberg, CNBC, WSJ, Financial Times, and more
 - **30-Day History** - Access up to a month of historical financial news
 - **Powerful Filtering** - Filter by date range, source, and search keywords/stock symbols
-- **Hourly Updates** - Automatically fetches new articles every hour via Vercel Cron
+- **Daily Updates** - Automatically fetches new articles daily via Vercel Cron (free tier)
 - **Pagination Support** - Efficient pagination for large result sets
 - **Full-Text Search** - Search across article titles and descriptions
 
@@ -214,24 +214,26 @@ Edit `config/rss-feeds.ts` and add your feed to the `RSS_FEEDS` array:
 
 ### Changing Cron Schedule
 
-Edit `vercel.json` to change how often articles are fetched:
+The default schedule runs once daily (compatible with Vercel free tier):
 
 ```json
 {
   "crons": [
     {
       "path": "/api/cron/fetch-rss",
-      "schedule": "0 * * * *"  // Every hour at minute 0
+      "schedule": "0 0 * * *"  // Once daily at midnight UTC
     }
   ]
 }
 ```
 
-Cron schedule examples:
+**Note**: Vercel's free Hobby plan only supports daily cron jobs.
+
+For more frequent updates (requires Vercel Pro plan):
 - `0 * * * *` - Every hour
 - `0 */2 * * *` - Every 2 hours
-- `*/30 * * * *` - Every 30 minutes
-- `0 0 * * *` - Once daily at midnight
+- `0 */6 * * *` - Every 6 hours
+- `0 0 * * *` - Once daily at midnight (FREE)
 
 ### Adjusting Data Retention
 

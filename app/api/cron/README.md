@@ -20,18 +20,20 @@ The cron job is configured in `vercel.json`:
   "crons": [
     {
       "path": "/api/cron/fetch-rss",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
 ```
 
-**Schedule**: `0 * * * *` (every hour at minute 0)
+**Schedule**: `0 0 * * *` (once daily at midnight UTC)
 
-To change the frequency, modify the cron expression:
+**Note**: Vercel's free Hobby plan only supports daily cron jobs. For more frequent updates (hourly/every few hours), you'll need to upgrade to the Pro plan.
+
+Alternative cron expressions (requires Pro plan):
 - `0 * * * *` - Every hour
 - `0 */2 * * *` - Every 2 hours
-- `0 0 * * *` - Once a day at midnight
+- `0 */6 * * *` - Every 6 hours
 - `*/30 * * * *` - Every 30 minutes
 
 ### Security
