@@ -29,12 +29,6 @@ export const RSS_FEEDS: RSSFeed[] = [
     category: 'general',
     description: 'MarketWatch top financial stories',
   },
-  {
-    name: 'MarketWatch Market Pulse',
-    url: 'https://www.marketwatch.com/rss/marketpulse',
-    category: 'markets',
-    description: 'Real-time market news and analysis',
-  },
 
   // Seeking Alpha
   {
