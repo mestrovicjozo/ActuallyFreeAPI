@@ -4,7 +4,9 @@
       "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --eslint)",
       "Bash(npm install)",
       "Bash(git add .)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nInitial Next.js setup with TypeScript and dependencies\n\n- Set up Next.js 15 with App Router\n- Configured TypeScript, Tailwind CSS, and ESLint\n- Installed dependencies: Supabase client, rss-parser, date-fns\n- Created basic project structure and layout\n- Added environment variable template\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial Next.js setup with TypeScript and dependencies\n\n- Set up Next.js 15 with App Router\n- Configured TypeScript, Tailwind CSS, and ESLint\n- Installed dependencies: Supabase client, rss-parser, date-fns\n- Created basic project structure and layout\n- Added environment variable template\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Supabase client configuration and database schema\n\n- Created Supabase client with TypeScript types\n- Added comprehensive SQL schema for news_articles table\n- Implemented indexes for optimal query performance\n- Added full-text search capability\n- Included auto-cleanup function for 30-day retention\n- Created detailed database setup documentation\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
