@@ -1,11 +1,39 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Use placeholder values during build if env vars not set
-// Note: These are just for build-time. Real credentials must be set in Vercel environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://xxxxxxxxxxxxxxxxxxxxx.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTI4MDAsImV4cCI6MTk2MDc2ODgwMH0.placeholder';
+// Check if we're in build mode (no browser, no runtime server)
+const isBuildTime = typeof window === 'undefined' && !process.env.NEXT_RUNTIME;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+let supabaseInstance: SupabaseClient | null = null;
+
+function getSupabase() {
+  if (!supabaseInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error(
+        'Missing Supabase environment variables. ' +
+        'Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your Vercel environment variables.'
+      );
+    }
+
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return supabaseInstance;
+}
+
+// Export a proxy that creates the client on first access (lazy initialization)
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(target, prop) {
+    // During build time, return dummy object to prevent errors
+    if (isBuildTime) {
+      return () => {};
+    }
+    // At runtime, initialize and use real client
+    const client = getSupabase();
+    return (client as any)[prop];
+  }
+});
 
 // Database types
 export interface NewsArticle {
