@@ -61,21 +61,21 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Get Latest News</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>curl https://your-domain.vercel.app/api/news</code>
+                <code>curl https://actually-free-api.vercel.app/api/news</code>
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Search for Stock Symbol</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>curl https://your-domain.vercel.app/api/news?search=AAPL</code>
+                <code>curl https://actually-free-api.vercel.app/api/news?search=AAPL</code>
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Filter by Date Range</h3>
               <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>curl https://your-domain.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31</code>
+                <code>curl https://actually-free-api.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31</code>
               </div>
             </div>
           </div>
