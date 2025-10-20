@@ -18,7 +18,19 @@
       "Bash(git commit -m \"Fix Supabase URL validation error during build\n\n- Use properly formatted placeholder Supabase URL\n- Ensure build succeeds without real credentials\n- Add comment explaining placeholders are for build-time only\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
       "Bash(git commit -m \"Fix build error with lazy Supabase client initialization\n\n- Use Proxy pattern to defer client creation until runtime\n- Detect build mode and skip initialization during build\n- Initialize client only when first API call is made\n- Provides clear error messages if env vars missing at runtime\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
       "Bash(git add app/page.tsx)",
-      "Bash(git commit -m \"Update homepage links to point to GitHub repository\n\n- Fixed documentation link to point to GitHub README\n- Updated footer GitHub link to repository URL\n- Added Contributing link in footer\n- README.md and CONTRIBUTING.md already visible on GitHub\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")"
+      "Bash(git commit -m \"Update homepage links to point to GitHub repository\n\n- Fixed documentation link to point to GitHub README\n- Updated footer GitHub link to repository URL\n- Added Contributing link in footer\n- README.md and CONTRIBUTING.md already visible on GitHub\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git add .gitignore)",
+      "Bash(git commit -m \"Add .env.example to .gitignore\")",
+      "WebSearch",
+      "Bash(git add config/rss-feeds.ts)",
+      "Bash(git commit -m \"Fix broken RSS feeds and add working alternatives\n\n- Replace Reuters feed with working feeds.reuters.com URL\n- Update Forbes feeds to /business/feed and /innovation/feed2\n- Replace Barron''s (403 forbidden) with Business Insider Markets\n- Update Investopedia feed URL to working endpoint\n- All 21 feeds should now work without 404/403/406 errors\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git add README.md)",
+      "Bash(git commit -m \"Simplify README to focus on API usage instead of setup\n\n- Remove detailed setup/deployment instructions from main README\n- Focus on how to use the API endpoints\n- Add quick start examples with curl commands\n- Move self-hosting instructions to DEPLOYMENT.md reference\n- Make it clear this is a public API service ready to use\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git rm --cached .env.example)",
+      "Bash(git commit -m \"Remove .env.example from repository\n\n- Keep file locally but remove from git tracking\n- Already in .gitignore to prevent future commits\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git commit -m \"Update README with actual API domain\n\n- Replace placeholder URLs with https://actually-free-api.vercel.app\n- Make it clear where users should send requests\n- All examples now use the live production URL\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git commit -m \"Update homepage with actual API domain\n\n- Replace placeholder URLs with https://actually-free-api.vercel.app\n- Users can now copy-paste working curl commands directly\n- Makes it clear this is a public API ready to use\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(npm install framer-motion)"
     ],
     "deny": [],
     "ask": []
