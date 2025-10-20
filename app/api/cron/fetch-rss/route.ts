@@ -52,7 +52,12 @@ export async function GET(request: NextRequest) {
           const content = item.content || item.contentSnippet || null;
 
           // Extract tickers from title, description, and content
-          const tickers = extractTickersFromArticle(title, description, content);
+          let tickers: string[] = [];
+          try {
+            tickers = extractTickersFromArticle(title, description, content);
+          } catch (error) {
+            console.error('Error extracting tickers:', error);
+          }
 
           return {
             title,
