@@ -3,6 +3,7 @@ import Parser from 'rss-parser';
 import { supabase } from '@/lib/supabase';
 import { RSS_FEEDS } from '@/config/rss-feeds';
 import type { NewsArticleInsert } from '@/lib/supabase';
+import { extractTickersFromArticle } from '@/lib/extractTickers';
 
 const parser = new Parser({
   timeout: 10000,
@@ -45,15 +46,25 @@ export async function GET(request: NextRequest) {
 
       const articles: NewsArticleInsert[] = rssFeed.items
         .filter(item => item.link && item.title && item.pubDate)
-        .map(item => ({
-          title: item.title!,
-          description: item.contentSnippet || item.content || null,
-          link: item.link!,
-          pub_date: new Date(item.pubDate!).toISOString(),
-          source: feed.name,
-          guid: item.guid || item.link!,
-          content: item.content || item.contentSnippet || null,
-        }));
+        .map(item => {
+          const title = item.title!;
+          const description = item.contentSnippet || item.content || null;
+          const content = item.content || item.contentSnippet || null;
+
+          // Extract tickers from title, description, and content
+          const tickers = extractTickersFromArticle(title, description, content);
+
+          return {
+            title,
+            description,
+            link: item.link!,
+            pub_date: new Date(item.pubDate!).toISOString(),
+            source: feed.name,
+            guid: item.guid || item.link!,
+            content,
+            tickers: tickers.length > 0 ? tickers : null,
+          };
+        });
 
       if (articles.length === 0) {
         results.push({

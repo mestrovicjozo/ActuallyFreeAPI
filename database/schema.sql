@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS news_articles (
   source TEXT NOT NULL,
   guid TEXT NOT NULL UNIQUE,
   content TEXT,
+  tickers TEXT[],
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -19,6 +20,10 @@ CREATE INDEX IF NOT EXISTS idx_news_articles_created_at ON news_articles(created
 -- Create a GIN index for full-text search on title and description
 CREATE INDEX IF NOT EXISTS idx_news_articles_search ON news_articles
 USING GIN (to_tsvector('english', title || ' ' || COALESCE(description, '')));
+
+-- Create a GIN index for ticker array searches
+CREATE INDEX IF NOT EXISTS idx_news_articles_tickers ON news_articles
+USING GIN (tickers);
 
 -- Function to automatically delete articles older than 30 days
 CREATE OR REPLACE FUNCTION delete_old_articles()

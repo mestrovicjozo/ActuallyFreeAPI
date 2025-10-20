@@ -36,6 +36,7 @@ export interface NewsArticle {
   source: string;
   guid: string;
   content: string | null;
+  tickers: string[] | null;
   created_at: string;
 }
 
@@ -47,4 +48,5 @@ export interface NewsArticleInsert {
   source: string;
   guid: string;
   content?: string | null;
+  tickers?: string[] | null;
 }

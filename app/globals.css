@@ -10,19 +10,10 @@
   --electric-blue-dark: #0052CC;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ffffff;
-    --electric-blue: #0080FF;
-    --electric-blue-light: #3399FF;
-    --electric-blue-dark: #0066FF;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
+  --background: #ffffff;  
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden;
 }

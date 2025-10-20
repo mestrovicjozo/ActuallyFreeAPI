@@ -6,6 +6,7 @@ interface NewsQueryParams {
   endDate?: string;
   search?: string;
   source?: string;
+  ticker?: string;
   page?: string;
   limit?: string;
 }
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate');
     const search = searchParams.get('search');
     const source = searchParams.get('source');
+    const ticker = searchParams.get('ticker');
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 per page
 
@@ -66,6 +68,12 @@ export async function GET(request: NextRequest) {
       query = query.eq('source', source);
     }
 
+    // Apply ticker filter (searches in tickers array)
+    if (ticker) {
+      // PostgreSQL array contains operator
+      query = query.contains('tickers', [ticker.toUpperCase()]);
+    }
+
     // Apply search filter (searches in title and description)
     if (search) {
       query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
@@ -105,6 +113,7 @@ export async function GET(request: NextRequest) {
         endDate: endDate || null,
         search: search || null,
         source: source || null,
+        ticker: ticker || null,
       },
     });
   } catch (error) {
