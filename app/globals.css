@@ -5,12 +5,18 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
+  --electric-blue: #0066FF;
+  --electric-blue-light: #3399FF;
+  --electric-blue-dark: #0052CC;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000000;
+    --background: #0a0a0a;
     --foreground: #ffffff;
+    --electric-blue: #0080FF;
+    --electric-blue-light: #3399FF;
+    --electric-blue-dark: #0066FF;
   }
 }
 
@@ -27,54 +33,73 @@ body {
   }
 }
 
+/* JSON Syntax Highlighting */
+.json-key {
+  color: var(--electric-blue);
+  font-weight: 600;
+}
+
+.json-string {
+  color: #059669;
+}
+
+.json-number {
+  color: #7c3aed;
+}
+
+.json-boolean {
+  color: #dc2626;
+}
+
+.json-null {
+  color: #6b7280;
+}
+
 /* Custom animations */
-@keyframes gradient-shift {
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
   0%, 100% {
-    background-position: 0% 50%;
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.1);
   }
   50% {
-    background-position: 100% 50%;
+    box-shadow: 0 0 40px rgba(0, 102, 255, 0.3);
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 102, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
 }
 
-@keyframes pulse-border {
-  0%, 100% {
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    border-color: rgba(0, 0, 0, 0.3);
-  }
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
 }
 
-@media (prefers-color-scheme: dark) {
-  @keyframes pulse-border {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-    50% {
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-border {
-  animation: pulse-border 3s ease-in-out infinite;
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
