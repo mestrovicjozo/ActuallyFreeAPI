@@ -126,8 +126,8 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - White Background */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-gray-900 to-black">
+      {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -138,8 +138,8 @@ export default function Home() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-6xl md:text-7xl font-bold mb-6 text-black"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-purple-300 bg-clip-text text-transparent"
           >
             Free Financial News API
           </motion.h1>
@@ -147,18 +147,18 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto"
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
           >
-            Access <span className="font-bold text-[#0066FF]">30 days</span> of financial news from{' '}
-            <span className="font-bold text-[#0066FF]">21+ major sources</span>
+            Access <span className="font-bold text-purple-400">30 days</span> of financial news from{' '}
+            <span className="font-bold text-purple-400">21+ major sources</span>
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-lg text-gray-600 mb-10"
+            transition={{ duration: 0.8, delay: 0.25 }}
+            className="text-lg text-gray-400 mb-10"
           >
             No API keys • No rate limits • No credit card
           </motion.p>
@@ -166,14 +166,14 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
             className="flex gap-4 justify-center flex-wrap"
           >
             <motion.a
               href="#try-it"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-lg font-semibold text-lg transition-colors shadow-lg shadow-blue-500/30"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white rounded-lg font-semibold text-lg transition-all shadow-lg shadow-purple-500/50 hover:shadow-purple-400/60"
             >
               Try It Now
             </motion.a>
@@ -181,9 +181,9 @@ export default function Home() {
               href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 border-2 border-gray-300 text-black hover:border-[#0066FF] rounded-lg font-semibold text-lg transition-colors"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 border-2 border-purple-500/50 bg-purple-500/10 backdrop-blur-sm text-purple-200 hover:border-purple-400 hover:bg-purple-500/20 rounded-lg font-semibold text-lg transition-all"
             >
               Documentation
             </motion.a>
@@ -200,31 +200,33 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-24"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center text-black">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
             What You&apos;ll Get
           </h2>
-          <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-center text-gray-300 mb-12 max-w-2xl mx-auto text-lg">
             Make a simple GET request and receive structured JSON with article metadata, summaries, and links to full content
           </p>
 
           <div className="max-w-5xl mx-auto">
-            <div className="bg-black rounded-xl border border-gray-700 overflow-hidden shadow-xl">
+            <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 overflow-hidden shadow-2xl shadow-purple-500/20 relative">
+              {/* Gradient border effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-2xl blur-xl -z-10"></div>
                 {/* Terminal Header */}
-                <div className="bg-gray-800 px-4 py-3 flex items-center justify-between border-b border-gray-700">
+                <div className="bg-gray-900/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-purple-500/20">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-500"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <span className="text-sm text-gray-300 font-mono">
+                  <span className="text-sm text-purple-300 font-mono">
                     GET /api/news
                   </span>
                   <button
                     onClick={() => copyToClipboard(JSON.stringify(exampleResponse, null, 2), 999)}
-                    className="text-sm text-[#0066FF] hover:underline font-medium"
+                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
                   >
                     {copiedIndex === 999 ? 'Copied!' : 'Copy'}
                   </button>
@@ -242,7 +244,7 @@ export default function Home() {
                           if (parts.length > 1) {
                             return (
                               <div key={i}>
-                                <span className="text-[#0066FF] font-semibold">{parts[0]}:</span>
+                                <span className="text-purple-400 font-semibold">{parts[0]}:</span>
                                 <span className="text-green-400">{parts.slice(1).join(':')}</span>
                               </div>
                             );
@@ -257,50 +259,18 @@ export default function Home() {
             </div>
           </motion.div>
 
-        {/* Features Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-24"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-black">
-            Why Use This API?
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-black rounded-xl border border-gray-700 hover:border-[#0066FF] transition-all shadow-sm hover:shadow-lg"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold mb-2 text-white">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Quick Start Examples */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-24"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center text-black">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
             Quick Start
           </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-center text-gray-300 mb-12 max-w-2xl mx-auto text-lg">
             Copy and paste these examples to start fetching financial news instantly
           </p>
 
@@ -311,8 +281,8 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-black rounded-xl border border-gray-700 overflow-hidden hover:border-[#0066FF] transition-all"
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                className="group bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 overflow-hidden hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -320,18 +290,18 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-white mb-1">
                         {example.title}
                       </h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-300">
                         {example.description}
                       </p>
                     </div>
                     <button
                       onClick={() => copyToClipboard(example.code, i)}
-                      className="px-3 py-1 text-sm bg-gray-800 text-[#0066FF] rounded-md hover:bg-gray-700 transition-colors font-medium"
+                      className="px-3 py-1 text-sm bg-purple-500/20 text-purple-300 rounded-md hover:bg-purple-500/30 transition-colors font-medium border border-purple-500/30"
                     >
                       {copiedIndex === i ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
-                  <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto border border-gray-800">
+                  <div className="bg-gray-900/60 rounded-lg p-4 overflow-x-auto border border-purple-500/20">
                     <code className="text-sm font-mono text-green-400">
                       {example.code}
                     </code>
@@ -347,10 +317,10 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-24"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-black">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
             Available Endpoints
           </h2>
 
@@ -377,19 +347,58 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-black rounded-xl border border-gray-700 hover:border-[#0066FF] transition-all shadow-sm hover:shadow-lg"
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                whileHover={{ y: -3 }}
+                className="group relative p-6 bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
               >
-                <div className="inline-block px-3 py-1 bg-[#0066FF] text-white rounded-md text-sm font-bold mb-3">
-                  {endpoint.method}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/0 to-purple-500/0 group-hover:from-purple-500/10 group-hover:via-pink-500/10 group-hover:to-purple-500/10 rounded-2xl transition-all duration-300"></div>
+                <div className="relative z-10">
+                  <div className="inline-block px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-md text-sm font-bold mb-3">
+                    {endpoint.method}
+                  </div>
+                  <h3 className="text-lg font-bold text-white font-mono mb-2">
+                    {endpoint.path}
+                  </h3>
+                  <p className="text-gray-300 text-sm">
+                    {endpoint.description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-bold text-white font-mono mb-2">
-                  {endpoint.path}
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  {endpoint.description}
-                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Features Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="mb-24"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+            Why Use This API?
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, i) => (
+              <motion.div
+                key={i}
+                variants={itemVariants}
+                whileHover={{ y: -3 }}
+                className="group relative p-6 bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
+              >
+                {/* Gradient glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/0 to-purple-500/0 group-hover:from-purple-500/10 group-hover:via-pink-500/10 group-hover:to-purple-500/10 rounded-2xl transition-all duration-300"></div>
+                <div className="relative z-10">
+                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <h3 className="text-lg font-bold mb-2 text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -400,10 +409,10 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-24"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-black">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
             News Sources
           </h2>
 
@@ -419,9 +428,9 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.03 }}
-                whileHover={{ scale: 1.05, borderColor: '#0066FF' }}
-                className="px-4 py-3 bg-black border border-gray-700 rounded-lg text-center text-sm font-semibold text-white transition-all"
+                transition={{ duration: 0.4, delay: i * 0.02 }}
+                whileHover={{ scale: 1.03 }}
+                className="px-4 py-3 bg-black/40 backdrop-blur-xl border border-purple-500/30 hover:border-purple-400/50 rounded-xl text-center text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-purple-500/20"
               >
                 {source}
               </motion.div>
@@ -434,10 +443,11 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center pt-12 pb-6"
         >
-          <div className="bg-white rounded-xl p-8 border border-gray-300">
-            <p className="text-black mb-4">
+          <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/30 shadow-lg shadow-purple-500/10">
+            <p className="text-gray-300 mb-4">
               Built with Next.js, Supabase & Vercel
             </p>
             <div className="flex gap-6 justify-center">
@@ -445,23 +455,23 @@ export default function Home() {
                 href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ y: -2 }}
-                className="text-[#0066FF] font-semibold hover:underline"
+                whileHover={{ y: -1 }}
+                className="text-purple-400 font-semibold hover:text-purple-300 transition-colors"
               >
                 GitHub
               </motion.a>
-              <span className="text-gray-400">•</span>
+              <span className="text-gray-600">•</span>
               <motion.a
                 href="https://github.com/mestrovicjozo/ActuallyFreeAPI/blob/main/CONTRIBUTING.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ y: -2 }}
-                className="text-[#0066FF] font-semibold hover:underline"
+                whileHover={{ y: -1 }}
+                className="text-purple-400 font-semibold hover:text-purple-300 transition-colors"
               >
                 Contributing
               </motion.a>
             </div>
-            <p className="mt-6 text-sm text-black">
+            <p className="mt-6 text-sm text-gray-400">
               Making financial news accessible to everyone
             </p>
           </div>
