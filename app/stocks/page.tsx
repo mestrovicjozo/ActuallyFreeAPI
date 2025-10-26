@@ -96,7 +96,7 @@ export default function StocksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 via-gray-900 to-black">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -366,37 +366,46 @@ export default function StocksPage() {
           </div>
         </motion.div>
 
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t border-green-500/20 bg-black/40 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <div className="text-center text-gray-400">
-            <p className="mb-2">
-              Built with ❤️ using Next.js, Supabase, and Finnhub API
+        {/* Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center pt-12 pb-6"
+        >
+          <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-green-500/30 shadow-lg shadow-green-500/10">
+            <p className="text-gray-300 mb-4">
+              Built with Next.js, Supabase & Vercel
             </p>
-            <div className="flex justify-center gap-4 text-sm">
-              <a
+            <div className="flex gap-6 justify-center">
+              <motion.a
                 href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-green-400 transition-colors"
+                whileHover={{ y: -1 }}
+                className="text-green-400 font-semibold hover:text-green-300 transition-colors"
               >
                 GitHub
-              </a>
-              <span>•</span>
-              <a
-                href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
+              </motion.a>
+              <span className="text-gray-600">•</span>
+              <motion.a
+                href="https://github.com/mestrovicjozo/ActuallyFreeAPI/blob/main/CONTRIBUTING.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-green-400 transition-colors"
+                whileHover={{ y: -1 }}
+                className="text-green-400 font-semibold hover:text-green-300 transition-colors"
               >
-                Documentation
-              </a>
+                Contributing
+              </motion.a>
             </div>
+            <p className="mt-6 text-sm text-gray-400">
+              Making financial data accessible to everyone
+            </p>
           </div>
-        </div>
-      </footer>
+        </motion.div>
+
+      </div>
     </div>
   );
 }

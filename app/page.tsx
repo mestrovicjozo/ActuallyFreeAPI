@@ -128,7 +128,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 via-gray-900 to-black">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
