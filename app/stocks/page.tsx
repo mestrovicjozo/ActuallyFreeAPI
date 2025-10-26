@@ -162,40 +162,6 @@ export default function StocksPage() {
       {/* Sections */}
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
 
-        {/* Features Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-24"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
-            Why Use Our Stock API?
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.02 }}
-                className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-300">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* JSON Response Preview */}
         <motion.div
           id="try-it"
@@ -361,6 +327,40 @@ export default function StocksPage() {
                     )}
                   </div>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Features Grid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mb-24"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
+            Why Use Our Stock API?
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
+                className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
+              >
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-300">
+                  {feature.description}
+                </p>
               </motion.div>
             ))}
           </div>
