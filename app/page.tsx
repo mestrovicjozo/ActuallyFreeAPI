@@ -121,7 +121,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 via-gray-900 to-black">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -185,14 +185,14 @@ export default function Home() {
       </div>
 
       {/* Sections with individual black backgrounds */}
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 lg:px-8">
 
         {/* Article Count Display */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.5 }}
-          className="mb-12 text-center"
+          className="mb-16 text-center"
         >
           <div className="inline-block bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 px-8 py-6 shadow-xl shadow-purple-500/20">
             <p className="text-gray-300 text-lg mb-2">Currently Available</p>
