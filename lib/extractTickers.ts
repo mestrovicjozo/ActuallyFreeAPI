@@ -1,7 +1,15 @@
 /**
- * Extracts stock ticker symbols from text
- * Supports formats like: $AAPL, (AAPL), NASDAQ:AAPL, NYSE:AAPL
+ * Robust stock ticker symbol extraction from text
+ * Uses a three-tier approach:
+ * 1. Explicit ticker mentions ($AAPL, NASDAQ:GOOGL)
+ * 2. Company name matching (Alphabet → GOOGL)
+ * 3. Validation against tracked stocks only
  */
+
+import {
+  extractTickersFromCompanyNames,
+  isTrackedTicker
+} from './ticker-mappings';
 
 // Common stock exchanges
 const EXCHANGES = [
@@ -19,28 +27,35 @@ const EXCHANGES = [
 ];
 
 /**
- * Extracts ticker symbols from text
+ * Extracts ticker symbols from text using multiple strategies
  * @param text - The text to extract tickers from (title, description, content)
- * @returns Array of unique ticker symbols in uppercase
+ * @returns Array of unique ticker symbols in uppercase (validated against tracked stocks)
  */
 export function extractTickers(text: string): string[] {
   if (!text) return [];
 
   const tickers = new Set<string>();
 
+  // TIER 1: Explicit ticker mentions (highest confidence)
+  // These are intentional ticker references in standard formats
+
   // Pattern 1: Dollar sign format - $AAPL, $TSLA
-  // Must be 1-5 uppercase letters after $
   const dollarPattern = /\$([A-Z]{1,5})\b/g;
   let match;
   while ((match = dollarPattern.exec(text)) !== null) {
-    tickers.add(match[1]);
+    const ticker = match[1];
+    if (isTrackedTicker(ticker)) {
+      tickers.add(ticker);
+    }
   }
 
   // Pattern 2: Parentheses format - (AAPL), (NASDAQ:AAPL)
-  // Extracts ticker from parentheses
   const parenPattern = /\((?:(?:NYSE|NASDAQ|AMEX):\s*)?([A-Z]{1,5})\)/g;
   while ((match = parenPattern.exec(text)) !== null) {
-    tickers.add(match[1]);
+    const ticker = match[1];
+    if (isTrackedTicker(ticker)) {
+      tickers.add(ticker);
+    }
   }
 
   // Pattern 3: Exchange prefix format - NASDAQ:AAPL, NYSE:TSLA
@@ -49,33 +64,40 @@ export function extractTickers(text: string): string[] {
     'g'
   );
   while ((match = exchangePattern.exec(text)) !== null) {
-    tickers.add(match[2]);
+    const ticker = match[2];
+    if (isTrackedTicker(ticker)) {
+      tickers.add(ticker);
+    }
   }
 
   // Pattern 4: Ticker references in quotes - "AAPL", 'TSLA'
+  // Only if they're valid tracked tickers
   const quotePattern = /["']([A-Z]{1,5})["']/g;
   while ((match = quotePattern.exec(text)) !== null) {
-    // Only add if it's likely a ticker (not a common word)
-    const potential = match[1];
-    if (isLikelyTicker(potential)) {
-      tickers.add(potential);
+    const ticker = match[1];
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
     }
   }
 
-  // Pattern 5: Standalone uppercase words that look like tickers
-  // More conservative - only 2-5 letters, surrounded by specific patterns
-  const standalonePattern = /\b([A-Z]{2,5})\b(?=\s+(?:stock|shares|stock|ticker|traded|trading|market|price|earnings|revenue|profit|loss|gained|rose|fell|dropped|climbed|plunged|surged))/gi;
-  while ((match = standalonePattern.exec(text)) !== null) {
-    const potential = match[1].toUpperCase();
-    if (isLikelyTicker(potential)) {
-      tickers.add(potential);
+  // Pattern 5: Context-aware standalone ticker mentions
+  // Look for tickers followed by stock-related keywords
+  // Example: "AAPL shares rose" or "TSLA stock jumped"
+  const contextPattern = /\b([A-Z]{2,5})\b\s+(?:stock|shares|ticker|traded|trading|equity|equities)\b/gi;
+  while ((match = contextPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase();
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
     }
   }
 
-  // Filter out common false positives
-  const filtered = Array.from(tickers).filter(ticker => !isFalsePositive(ticker));
+  // TIER 2: Company name extraction (high confidence)
+  // Extract tickers from company names like "Apple", "Alphabet", "Tesla"
+  const companyTickers = extractTickersFromCompanyNames(text);
+  companyTickers.forEach(ticker => tickers.add(ticker));
 
-  return filtered.sort();
+  // Return sorted array of validated tickers
+  return Array.from(tickers).sort();
 }
 
 /**
