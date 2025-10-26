@@ -101,13 +101,13 @@ async function updateArticleTickers() {
           );
 
           // Compare with existing tickers
-          const oldTickers = article.tickers || [];
-          const oldSet = new Set(oldTickers);
-          const newSet = new Set(newTickers);
+          const oldTickers: string[] = article.tickers || [];
+          const oldSet = new Set<string>(oldTickers);
+          const newSet = new Set<string>(newTickers);
 
           const hasChanged =
             oldSet.size !== newSet.size ||
-            ![...oldSet].every(ticker => newSet.has(ticker));
+            ![...oldSet].every((ticker: string) => newSet.has(ticker));
 
           if (hasChanged) {
             // Update the article
