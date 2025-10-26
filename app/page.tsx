@@ -192,11 +192,11 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.5 }}
-          className="mb-20 text-center"
+          className="mb-12 text-center"
         >
           <div className="inline-block bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 px-8 py-6 shadow-xl shadow-purple-500/20">
             <p className="text-gray-300 text-lg mb-2">Currently Available</p>
-            <div className="flex items-center gap-3 justify-center">
+            <div className="flex items-baseline gap-3 justify-center">
               {loading ? (
                 <div className="animate-pulse">
                   <div className="h-12 w-32 bg-purple-500/20 rounded-lg"></div>
@@ -211,7 +211,7 @@ export default function Home() {
                   >
                     {articleCount?.toLocaleString() || '0'}
                   </motion.span>
-                  <span className="text-2xl font-semibold text-purple-300">articles</span>
+                  <span className="text-5xl font-bold text-purple-300">articles</span>
                 </>
               )}
             </div>
