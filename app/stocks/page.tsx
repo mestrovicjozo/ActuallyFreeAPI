@@ -181,7 +181,7 @@ export default function StocksPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
@@ -263,7 +263,7 @@ export default function StocksPage() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 className="group bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
               >
                 <div className="p-6">
@@ -330,7 +330,7 @@ export default function StocksPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg"
               >
                 <div className="flex items-start gap-4">

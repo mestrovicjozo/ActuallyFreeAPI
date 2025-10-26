@@ -115,6 +115,24 @@ export const TRACKED_STOCKS: Stock[] = [
   { ticker: 'LYFT', name: 'Lyft Inc.', index: ['NASDAQ-100'] },
   { ticker: 'ZM', name: 'Zoom Video Communications', index: ['NASDAQ-100', 'S&P 500'] },
   { ticker: 'DOCU', name: 'DocuSign Inc.', index: ['NASDAQ-100', 'S&P 500'] },
+
+  // Crypto & Blockchain
+  { ticker: 'COIN', name: 'Coinbase Global Inc.', index: ['NASDAQ-100'] },
+  { ticker: 'MSTR', name: 'MicroStrategy Inc.', index: ['NASDAQ-100'] },
+  { ticker: 'MARA', name: 'Marathon Digital Holdings', index: ['NASDAQ-100'] },
+  { ticker: 'RIOT', name: 'Riot Platforms Inc.', index: ['NASDAQ-100'] },
+
+  // Social Media & Communication
+  { ticker: 'SNAP', name: 'Snap Inc.', index: ['S&P 500'] },
+  { ticker: 'PINS', name: 'Pinterest Inc.', index: ['S&P 500'] },
+  { ticker: 'RDDT', name: 'Reddit Inc.', index: ['S&P 500'] },
+
+  // Clean Energy & EV
+  { ticker: 'PLUG', name: 'Plug Power Inc.', index: ['NASDAQ-100'] },
+  { ticker: 'FCEL', name: 'FuelCell Energy Inc.', index: ['NASDAQ-100'] },
+  { ticker: 'ENPH', name: 'Enphase Energy Inc.', index: ['NASDAQ-100'] },
+  { ticker: 'BLNK', name: 'Blink Charging Co.', index: ['NASDAQ-100'] },
+  { ticker: 'CHPT', name: 'ChargePoint Holdings', index: ['S&P 500'] },
 ];
 
 // Helper functions

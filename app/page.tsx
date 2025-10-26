@@ -17,19 +17,19 @@ export default function Home() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1
+        staggerChildren: 0.03,
+        delayChildren: 0
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
         ease: "easeOut" as const
       }
     }
@@ -281,7 +281,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 className="group bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 overflow-hidden hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
               >
                 <div className="p-6">
@@ -347,7 +347,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 whileHover={{ y: -3 }}
                 className="group relative p-6 bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
               >
@@ -425,10 +425,10 @@ export default function Home() {
             ].map((source, i) => (
               <motion.div
                 key={source}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.02 }}
+                transition={{ duration: 0.2, delay: i * 0.01 }}
                 whileHover={{ scale: 1.03 }}
                 className="px-4 py-3 bg-black/40 backdrop-blur-xl border border-purple-500/30 hover:border-purple-400/50 rounded-xl text-center text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-purple-500/20"
               >
