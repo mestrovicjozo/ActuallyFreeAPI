@@ -1,10 +1,26 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [articleCount, setArticleCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch article count from stats API
+    fetch('https://actually-free-api.vercel.app/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        setArticleCount(data.totalArticles);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch stats:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const copyToClipboard = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -170,6 +186,37 @@ export default function Home() {
 
       {/* Sections with individual black backgrounds */}
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+
+        {/* Article Count Display */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          className="mb-20 text-center"
+        >
+          <div className="inline-block bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 px-8 py-6 shadow-xl shadow-purple-500/20">
+            <p className="text-gray-300 text-lg mb-2">Currently Available</p>
+            <div className="flex items-center gap-3 justify-center">
+              {loading ? (
+                <div className="animate-pulse">
+                  <div className="h-12 w-32 bg-purple-500/20 rounded-lg"></div>
+                </div>
+              ) : (
+                <>
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.6 }}
+                    className="text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent"
+                  >
+                    {articleCount?.toLocaleString() || '0'}
+                  </motion.span>
+                  <span className="text-2xl font-semibold text-purple-300">articles</span>
+                </>
+              )}
+            </div>
+          </div>
+        </motion.div>
 
         {/* JSON Response Preview */}
         <motion.div
