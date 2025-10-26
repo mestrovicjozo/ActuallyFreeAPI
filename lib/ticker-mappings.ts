@@ -111,6 +111,15 @@ const MANUAL_ALIASES: Record<string, string[]> = {
   'ENPH': ['enphase', 'enphase energy'],
   'BLNK': ['blink', 'blink charging'],
   'CHPT': ['chargepoint', 'chargepoint holdings'],
+  'QBTS': ['d-wave', 'd-wave quantum', 'dwave'],
+  'IONQ': ['ionq', 'ionq inc'],
+  'QUBT': ['quantum computing', 'quantum computing inc'],
+  'RGTI': ['rigetti', 'rigetti computing'],
+  'PLTR': ['palantir', 'palantir technologies'],
+  'ASML': ['asml', 'asml holding'],
+  'FN': ['fabrinet'],
+  'FTNT': ['fortinet', 'fortinet inc'],
+  'FDS': ['factset', 'factset research', 'factset research systems'],
 };
 
 // Build the main mapping

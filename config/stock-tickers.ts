@@ -133,6 +133,25 @@ export const TRACKED_STOCKS: Stock[] = [
   { ticker: 'ENPH', name: 'Enphase Energy Inc.', index: ['NASDAQ-100'] },
   { ticker: 'BLNK', name: 'Blink Charging Co.', index: ['NASDAQ-100'] },
   { ticker: 'CHPT', name: 'ChargePoint Holdings', index: ['S&P 500'] },
+
+  // Quantum Computing
+  { ticker: 'QBTS', name: 'D-Wave Quantum Inc.', index: ['NASDAQ'] },
+  { ticker: 'IONQ', name: 'IonQ Inc.', index: ['NYSE'] },
+  { ticker: 'QUBT', name: 'Quantum Computing Inc.', index: ['NASDAQ'] },
+  { ticker: 'RGTI', name: 'Rigetti Computing Inc.', index: ['NASDAQ'] },
+
+  // AI & Data Analytics
+  { ticker: 'PLTR', name: 'Palantir Technologies Inc.', index: ['NYSE'] },
+
+  // Semiconductors & Manufacturing
+  { ticker: 'ASML', name: 'ASML Holding N.V.', index: ['NASDAQ'] },
+  { ticker: 'FN', name: 'Fabrinet', index: ['NYSE'] },
+
+  // Cybersecurity
+  { ticker: 'FTNT', name: 'Fortinet Inc.', index: ['NASDAQ'] },
+
+  // Financial Services & Data
+  { ticker: 'FDS', name: 'FactSet Research Systems Inc.', index: ['NYSE'] },
 ];
 
 // Helper functions
