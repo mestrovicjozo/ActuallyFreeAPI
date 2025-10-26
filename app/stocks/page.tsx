@@ -166,9 +166,8 @@ export default function StocksPage() {
         <motion.div
           id="try-it"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -210,9 +209,8 @@ export default function StocksPage() {
         {/* Quick Start Examples */}
         <motion.div
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -261,9 +259,8 @@ export default function StocksPage() {
         {/* API Endpoints */}
         <motion.div
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -335,9 +332,8 @@ export default function StocksPage() {
         {/* Features Grid */}
         <motion.div
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -369,9 +365,8 @@ export default function StocksPage() {
         {/* Footer */}
         <motion.div
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
           className="text-center pt-12 pb-6"
         >
           <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-green-500/30 shadow-lg shadow-green-500/10">
