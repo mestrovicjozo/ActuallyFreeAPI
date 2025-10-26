@@ -100,13 +100,13 @@ export default function StocksPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="text-center mb-20"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
             className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-green-200 to-green-300 bg-clip-text text-transparent"
           >
             Free Stock Prices API
@@ -115,7 +115,7 @@ export default function StocksPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
           >
             Access <span className="font-bold text-green-400">90 days</span> of stock prices for{' '}
@@ -125,7 +125,7 @@ export default function StocksPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.25 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
             className="text-lg text-gray-400 mb-10"
           >
             No API keys • No rate limits • 4 snapshots per day
@@ -134,7 +134,7 @@ export default function StocksPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
             className="flex gap-4 justify-center flex-wrap"
           >
             <motion.a
@@ -165,10 +165,10 @@ export default function StocksPage() {
         {/* JSON Response Preview */}
         <motion.div
           id="try-it"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -212,7 +212,7 @@ export default function StocksPage() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -262,8 +262,8 @@ export default function StocksPage() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -336,8 +336,8 @@ export default function StocksPage() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
@@ -371,7 +371,7 @@ export default function StocksPage() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center pt-12 pb-6"
         >
           <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-green-500/30 shadow-lg shadow-green-500/10">

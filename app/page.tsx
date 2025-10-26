@@ -12,29 +12,6 @@ export default function Home() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.03,
-        delayChildren: 0
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3,
-        ease: "easeOut" as const
-      }
-    }
-  };
-
   const exampleResponse = {
     data: [
       {
@@ -132,13 +109,13 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="text-center mb-20"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
             className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-purple-300 bg-clip-text text-transparent"
           >
             Free Financial News API
@@ -147,7 +124,7 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
           >
             Access <span className="font-bold text-purple-400">30 days</span> of financial news from{' '}
@@ -157,7 +134,7 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.25 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
             className="text-lg text-gray-400 mb-10"
           >
             No API keys • No rate limits • No credit card
@@ -166,7 +143,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
             className="flex gap-4 justify-center flex-wrap"
           >
             <motion.a
@@ -197,10 +174,10 @@ export default function Home() {
         {/* JSON Response Preview */}
         <motion.div
           id="try-it"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -264,7 +241,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -317,7 +294,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -370,10 +347,10 @@ export default function Home() {
 
         {/* Features Grid */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -384,7 +361,10 @@ export default function Home() {
             {features.map((feature, i) => (
               <motion.div
                 key={i}
-                variants={itemVariants}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.02 }}
                 whileHover={{ y: -3 }}
                 className="group relative p-6 bg-black/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 hover:border-purple-400/50 transition-all shadow-lg hover:shadow-purple-500/30"
               >
@@ -409,7 +389,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -443,7 +423,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center pt-12 pb-6"
         >
           <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/30 shadow-lg shadow-purple-500/10">
