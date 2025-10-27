@@ -1,115 +1,89 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import Link from 'next/link';
 
 export default function StocksPage() {
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
-
-  const exampleResponse = {
-    data: [
-      {
-        id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-        ticker: "AAPL",
-        company_name: "Apple Inc.",
-        price: 178.25,
-        change: 2.15,
-        change_percent: 1.22,
-        volume: null,
-        market_cap: null,
-        timestamp: "2025-01-20T16:00:00Z",
-        created_at: "2025-01-20T16:05:00Z"
-      },
-      {
-        id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-        ticker: "TSLA",
-        company_name: "Tesla Inc.",
-        price: 245.80,
-        change: -3.42,
-        change_percent: -1.37,
-        volume: null,
-        market_cap: null,
-        timestamp: "2025-01-20T16:00:00Z",
-        created_at: "2025-01-20T16:05:00Z"
-      }
-    ],
-    pagination: {
-      total: 2400,
-      limit: 100,
-      offset: 0,
-      returned: 2
-    }
-  };
-
-  const examples = [
+  const portfolioStocks = [
     {
-      title: 'Get Latest Prices',
-      description: 'Fetch the most recent stock prices',
-      code: 'curl https://actually-free-api.vercel.app/api/stocks'
+      category: 'Quantum Computing',
+      description: 'Leading the quantum computing revolution',
+      stocks: [
+        { ticker: 'QBTS', name: 'D-Wave Quantum', products: ['Quantum Annealing', 'Advantage', 'Leap Cloud'] },
+        { ticker: 'IONQ', name: 'IonQ', products: ['Trapped Ion', 'Forte', 'Aria'] },
+        { ticker: 'QUBT', name: 'Quantum Computing Inc.', products: ['Reservoir Computer', 'Dirac'] },
+        { ticker: 'RGTI', name: 'Rigetti Computing', products: ['Superconducting Quantum', 'Aspen'] }
+      ],
+      gradient: 'from-purple-500 to-pink-500',
+      bgGradient: 'from-purple-500/20 to-pink-500/20',
+      borderColor: 'border-purple-500/30',
+      hoverBorder: 'hover:border-purple-400/50'
     },
     {
-      title: 'Get Specific Stock',
-      description: 'Get price history for a specific ticker',
-      code: 'curl https://actually-free-api.vercel.app/api/stocks?ticker=AAPL'
+      category: 'Tech Giants',
+      description: 'The biggest names in technology',
+      stocks: [
+        { ticker: 'META', name: 'Meta Platforms', products: ['Facebook', 'Instagram', 'WhatsApp', 'Quest'] },
+        { ticker: 'NVDA', name: 'NVIDIA', products: ['GeForce', 'RTX', 'CUDA', 'AI Computing'] },
+        { ticker: 'MSFT', name: 'Microsoft', products: ['Windows', 'Azure', 'Office 365', 'GitHub'] },
+        { ticker: 'AMZN', name: 'Amazon', products: ['AWS', 'Prime', 'Alexa', 'Kindle'] },
+        { ticker: 'GOOGL', name: 'Alphabet (Google)', products: ['Search', 'YouTube', 'Android', 'Cloud'] }
+      ],
+      gradient: 'from-blue-500 to-cyan-500',
+      bgGradient: 'from-blue-500/20 to-cyan-500/20',
+      borderColor: 'border-blue-500/30',
+      hoverBorder: 'hover:border-blue-400/50'
     },
     {
-      title: 'Filter by Date Range',
-      description: 'Get stock prices within a date range',
-      code: 'curl "https://actually-free-api.vercel.app/api/stocks?ticker=TSLA&start_date=2025-01-01&end_date=2025-01-31"'
+      category: 'Semiconductors & Tech',
+      description: 'Hardware and semiconductor innovation',
+      stocks: [
+        { ticker: 'AMD', name: 'Advanced Micro Devices', products: ['Ryzen', 'Radeon', 'EPYC'] },
+        { ticker: 'AVGO', name: 'Broadcom', products: ['VMware', 'Semiconductors'] },
+        { ticker: 'ASML', name: 'ASML Holding', products: ['EUV Lithography', 'TwinScan'] },
+        { ticker: 'FN', name: 'Fabrinet', products: ['Optical Components', 'Automation'] }
+      ],
+      gradient: 'from-emerald-500 to-teal-500',
+      bgGradient: 'from-emerald-500/20 to-teal-500/20',
+      borderColor: 'border-emerald-500/30',
+      hoverBorder: 'hover:border-emerald-400/50'
     },
     {
-      title: 'Get All Tracked Tickers',
-      description: 'List all stocks being tracked',
-      code: 'curl https://actually-free-api.vercel.app/api/stocks/tickers'
+      category: 'AI & Enterprise',
+      description: 'Artificial intelligence and enterprise software leaders',
+      stocks: [
+        { ticker: 'PLTR', name: 'Palantir Technologies', products: ['Gotham', 'Foundry', 'AIP'] },
+        { ticker: 'ORCL', name: 'Oracle', products: ['Database', 'Cloud', 'Java'] },
+        { ticker: 'IBM', name: 'IBM', products: ['Watson', 'Red Hat', 'Quantum'] },
+        { ticker: 'FTNT', name: 'Fortinet', products: ['FortiGate', 'FortiOS'] },
+        { ticker: 'FDS', name: 'FactSet Research', products: ['Financial Analytics', 'Workstation'] }
+      ],
+      gradient: 'from-orange-500 to-red-500',
+      bgGradient: 'from-orange-500/20 to-red-500/20',
+      borderColor: 'border-orange-500/30',
+      hoverBorder: 'hover:border-orange-400/50'
     }
   ];
 
-  const features = [
-    {
-      title: '90+ Stocks',
-      description: 'Major companies from S&P 500, NASDAQ-100, and Dow Jones',
-      icon: '📊'
-    },
-    {
-      title: '4 Daily Snapshots',
-      description: 'Market open, midday, afternoon, and market close prices',
-      icon: '⏰'
-    },
-    {
-      title: '90-Day History',
-      description: 'Access up to 90 days of historical stock price data',
-      icon: '📅'
-    },
-    {
-      title: 'Real-Time Updates',
-      description: 'Prices updated daily from Finnhub API',
-      icon: '🔄'
-    }
-  ];
+  const totalStocks = portfolioStocks.reduce((sum, cat) => sum + cat.stocks.length, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-gray-900 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
-            className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-green-200 to-green-300 bg-clip-text text-transparent"
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent"
           >
-            Free Stock Prices API
+            Portfolio Stock Tracker
           </motion.h1>
 
           <motion.p
@@ -118,288 +92,213 @@ export default function StocksPage() {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
           >
-            Access <span className="font-bold text-green-400">90 days</span> of stock prices for{' '}
-            <span className="font-bold text-green-400">90+ major stocks</span>
+            Tracking <span className="font-bold text-blue-400">{totalStocks} stocks</span> from my{' '}
+            <span className="font-bold text-purple-400">AI Playground portfolio</span>
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="text-lg text-gray-400 mb-10"
+            className="text-lg text-gray-400 mb-8"
           >
-            No API keys • No rate limits • 4 snapshots per day
+            Intelligent news tracking with product, brand, and CEO name recognition
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.4 }}
-            className="flex gap-4 justify-center flex-wrap"
+            className="inline-block bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-blue-500/20"
           >
-            <motion.a
-              href="#try-it"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white rounded-lg font-semibold text-lg transition-all shadow-lg shadow-green-500/50 hover:shadow-green-400/60"
-            >
-              Try It Now
-            </motion.a>
-            <motion.a
-              href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 border-2 border-green-500/50 bg-green-500/10 backdrop-blur-sm text-green-200 hover:border-green-400 hover:bg-green-500/20 rounded-lg font-semibold text-lg transition-all"
-            >
-              Documentation
-            </motion.a>
+            <p className="text-sm text-gray-300">
+              <span className="font-semibold text-blue-300">Why these stocks?</span> This API tracks stocks from my personal investment portfolio,
+              focusing on quantum computing, AI, and next-generation technology.
+            </p>
           </motion.div>
         </motion.div>
-      </div>
 
-      {/* Sections */}
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-
-        {/* JSON Response Preview */}
-        <motion.div
-          id="try-it"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
-          className="mb-24"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
-            What You&apos;ll Get
-          </h2>
-          <p className="text-center text-gray-300 mb-12 max-w-2xl mx-auto text-lg">
-            Make a simple GET request and receive structured JSON with stock prices, changes, and historical data
-          </p>
-
-          <div className="max-w-5xl mx-auto">
-            <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden shadow-2xl shadow-green-500/20 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-green-500/20 rounded-2xl blur-xl -z-10"></div>
-              <div className="bg-gray-900/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-green-500/20">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+        {/* Stock Categories */}
+        <div className="space-y-12">
+          {portfolioStocks.map((category, categoryIndex) => (
+            <motion.div
+              key={category.category}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 + categoryIndex * 0.1 }}
+            >
+              {/* Category Header */}
+              <div className="mb-6">
+                <h2 className={`text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent`}>
+                  {category.category}
+                </h2>
+                <p className="text-gray-400 text-lg">{category.description}</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="text-sm text-gray-500">{category.stocks.length} stocks tracked</span>
                 </div>
-                <span className="text-sm text-green-300 font-mono">
-                  GET /api/stocks
-                </span>
-                <button
-                  onClick={() => copyToClipboard(JSON.stringify(exampleResponse, null, 2), 999)}
-                  className="text-sm text-green-400 hover:text-green-300 transition-colors font-medium"
-                >
-                  {copiedIndex === 999 ? 'Copied!' : 'Copy'}
-                </button>
               </div>
 
-              <div className="p-6 overflow-x-auto max-h-[600px] overflow-y-auto">
-                <pre className="text-sm font-mono text-gray-300">
-                  <code>{JSON.stringify(exampleResponse, null, 2)}</code>
-                </pre>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+              {/* Stocks Grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {category.stocks.map((stock, stockIndex) => (
+                  <motion.div
+                    key={stock.ticker}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: categoryIndex * 0.1 + stockIndex * 0.05 }}
+                    className={`relative group bg-black/40 backdrop-blur-xl rounded-xl border ${category.borderColor} ${category.hoverBorder} p-5 transition-all shadow-lg hover:shadow-xl`}
+                  >
+                    {/* Background Gradient Effect */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.bgGradient} rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}></div>
 
-        {/* Quick Start Examples */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-          className="mb-24"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
-            Quick Start
-          </h2>
-          <p className="text-center text-gray-300 mb-12 max-w-2xl mx-auto text-lg">
-            Copy and paste these examples to start fetching stock prices instantly
-          </p>
-
-          <div className="max-w-4xl mx-auto space-y-4">
-            {examples.map((example, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.02 }}
-                className="group bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 overflow-hidden hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-lg font-bold text-white mb-1">
-                        {example.title}
-                      </h3>
-                      <p className="text-sm text-gray-300">
-                        {example.description}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(example.code, i)}
-                      className="px-3 py-1 text-sm bg-green-500/20 text-green-300 rounded-md hover:bg-green-500/30 transition-colors font-medium border border-green-500/30"
-                    >
-                      {copiedIndex === i ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                  <div className="bg-gray-900/50 rounded-lg p-4 font-mono text-sm text-gray-300 overflow-x-auto border border-green-500/20">
-                    <code>{example.code}</code>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* API Endpoints */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
-          className="mb-24"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
-            Available Endpoints
-          </h2>
-
-          <div className="max-w-4xl mx-auto space-y-6">
-            {[
-              {
-                method: 'GET',
-                endpoint: '/api/stocks',
-                description: 'Get stock prices with optional filtering',
-                params: ['ticker', 'start_date', 'end_date', 'limit', 'offset']
-              },
-              {
-                method: 'GET',
-                endpoint: '/api/stocks/tickers',
-                description: 'Get list of all tracked stock tickers',
-                params: ['index (optional)']
-              },
-              {
-                method: 'GET',
-                endpoint: '/api/stocks/stats',
-                description: 'Get statistics about the stock database',
-                params: []
-              }
-            ].map((endpoint, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.02 }}
-                className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="px-3 py-1 bg-green-500/20 text-green-300 rounded-md font-mono text-sm font-bold border border-green-500/30">
-                    {endpoint.method}
-                  </span>
-                  <div className="flex-1">
-                    <code className="text-green-300 font-mono text-lg">
-                      {endpoint.endpoint}
-                    </code>
-                    <p className="text-gray-300 mt-2 mb-3">
-                      {endpoint.description}
-                    </p>
-                    {endpoint.params.length > 0 && (
-                      <div>
-                        <span className="text-sm text-gray-400">Parameters:</span>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {endpoint.params.map((param, j) => (
-                            <span
-                              key={j}
-                              className="px-2 py-1 bg-gray-800/50 text-gray-300 rounded text-xs font-mono border border-green-500/20"
-                            >
-                              {param}
-                            </span>
-                          ))}
-                        </div>
+                    {/* Ticker Badge */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={`px-3 py-1 bg-gradient-to-r ${category.gradient} rounded-lg`}>
+                        <span className="font-bold text-white text-lg">{stock.ticker}</span>
                       </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+                      <div className="text-xs text-gray-500 font-mono">
+                        ${stock.ticker}
+                      </div>
+                    </div>
 
-        {/* Features Grid */}
+                    {/* Company Name */}
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-200 transition-colors">
+                      {stock.name}
+                    </h3>
+
+                    {/* Products/Technologies */}
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                        Key Products:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {stock.products.map((product, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-gray-800/50 text-gray-300 rounded text-xs border border-gray-700/50 hover:border-gray-600 transition-colors"
+                          >
+                            {product}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Smart Tracking Features */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
-          className="mb-24"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
-            Why Use Our Stock API?
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+            Intelligent Stock Tracking
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.02 }}
-                className="bg-black/40 backdrop-blur-xl rounded-2xl border border-green-500/30 p-6 hover:border-green-400/50 transition-all shadow-lg hover:shadow-green-500/30"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-300">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-blue-500/30 p-6 hover:border-blue-400/50 transition-all">
+              <div className="text-4xl mb-4">🏷️</div>
+              <h3 className="text-xl font-bold text-white mb-2">Product Recognition</h3>
+              <p className="text-gray-300 text-sm mb-3">
+                Articles mentioning products are automatically tagged:
+              </p>
+              <div className="space-y-1 text-sm text-gray-400 font-mono">
+                <div>iOS → AAPL</div>
+                <div>Windows → MSFT</div>
+                <div>Instagram → META</div>
+                <div>GeForce → NVDA</div>
+              </div>
+            </div>
+
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6 hover:border-purple-400/50 transition-all">
+              <div className="text-4xl mb-4">👔</div>
+              <h3 className="text-xl font-bold text-white mb-2">CEO Name Tracking</h3>
+              <p className="text-gray-300 text-sm mb-3">
+                Mentions of CEOs automatically link to their companies:
+              </p>
+              <div className="space-y-1 text-sm text-gray-400 font-mono">
+                <div>Jensen Huang → NVDA</div>
+                <div>Mark Zuckerberg → META</div>
+                <div>Lisa Su → AMD</div>
+                <div>Alex Karp → PLTR</div>
+              </div>
+            </div>
+
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-emerald-500/30 p-6 hover:border-emerald-400/50 transition-all">
+              <div className="text-4xl mb-4">🔍</div>
+              <h3 className="text-xl font-bold text-white mb-2">Context-Aware Extraction</h3>
+              <p className="text-gray-300 text-sm mb-3">
+                Smart detection using multiple strategies:
+              </p>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div>• Ticker symbols ($AAPL, NASDAQ:NVDA)</div>
+                <div>• Company names & aliases</div>
+                <div>• Products & subsidiaries</div>
+                <div>• CEO quotes & mentions</div>
+              </div>
+            </div>
           </div>
         </motion.div>
 
-        {/* Footer */}
+        {/* API Access */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-16 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl p-8 border border-blue-500/20"
+        >
+          <h3 className="text-2xl font-bold text-white mb-4 text-center">
+            Access These Stocks via API
+          </h3>
+          <p className="text-gray-300 text-center mb-6">
+            Get news articles mentioning any of these stocks with our free API
+          </p>
+
+          <div className="max-w-3xl mx-auto space-y-4">
+            <div className="bg-gray-900/50 rounded-lg p-4 font-mono text-sm text-gray-300 border border-blue-500/20">
+              <code>GET /api/news?tickers=NVDA,PLTR,QBTS</code>
+            </div>
+            <div className="bg-gray-900/50 rounded-lg p-4 font-mono text-sm text-gray-300 border border-purple-500/20">
+              <code>GET /api/stocks</code>
+            </div>
+          </div>
+
+          <div className="flex gap-4 justify-center mt-6">
+            <Link
+              href="/"
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-semibold transition-all shadow-lg"
+            >
+              View API Docs
+            </Link>
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 border-2 border-blue-500/50 bg-blue-500/10 backdrop-blur-sm text-blue-200 hover:border-blue-400 hover:bg-blue-500/20 rounded-lg font-semibold transition-all"
+            >
+              GitHub
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Footer Note */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
-          className="text-center pt-12 pb-6"
+          transition={{ duration: 0.4, delay: 0.7 }}
+          className="mt-12 text-center"
         >
-          <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-green-500/30 shadow-lg shadow-green-500/10">
-            <p className="text-gray-300 mb-4">
-              Built with Next.js, Supabase & Vercel
-            </p>
-            <div className="flex gap-6 justify-center">
-              <motion.a
-                href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -1 }}
-                className="text-green-400 font-semibold hover:text-green-300 transition-colors"
-              >
-                GitHub
-              </motion.a>
-              <span className="text-gray-600">•</span>
-              <motion.a
-                href="https://github.com/mestrovicjozo/ActuallyFreeAPI/blob/main/CONTRIBUTING.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -1 }}
-                className="text-green-400 font-semibold hover:text-green-300 transition-colors"
-              >
-                Contributing
-              </motion.a>
-            </div>
-            <p className="mt-6 text-sm text-gray-400">
-              Making financial data accessible to everyone
-            </p>
-          </div>
+          <p className="text-gray-500 text-sm">
+            This tracker is based on my personal investment portfolio in quantum computing, AI, and technology stocks.
+            <br />
+            News articles are automatically tagged when they mention these companies, their products, or their leaders.
+          </p>
         </motion.div>
-
       </div>
     </div>
   );
