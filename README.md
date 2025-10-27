@@ -43,7 +43,6 @@ curl "https://actually-free-api.vercel.app/api/news?startDate=2024-01-01&endDate
 
 ### Stock Tracking API
 - **18 Portfolio Stocks** - Tracking AI, quantum computing, and tech stocks
-- **Intelligent Price Extraction** - Extracts stock prices from news articles
 - **Stock Statistics** - Get price trends and mentions for tracked stocks
 - **Portfolio Focus** - Curated list based on actual investment portfolio
 
@@ -223,7 +222,6 @@ Ideas for contributions:
 - Improve search functionality
 - Add sentiment analysis
 - Create SDKs for different languages
-- Improve documentation
 
 ## 📄 License
 
