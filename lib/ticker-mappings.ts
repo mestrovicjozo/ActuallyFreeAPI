@@ -13,26 +13,93 @@ export interface CompanyMapping {
 export const COMPANY_NAME_TO_TICKERS: Map<string, string[]> = new Map();
 
 // Manually defined aliases and variations for better matching
+// Includes: company names, product names, brand names, subsidiaries, and CEO/founder associations
 const MANUAL_ALIASES: Record<string, string[]> = {
-  'AAPL': ['apple', 'apple inc', 'apple computer'],
-  'MSFT': ['microsoft', 'microsoft corp', 'microsoft corporation'],
-  'GOOGL': ['alphabet', 'google', 'alphabet inc', 'google parent'],
-  'GOOG': ['alphabet', 'google', 'alphabet inc', 'google parent'],
-  'AMZN': ['amazon', 'amazon.com', 'amazon inc'],
-  'META': ['meta', 'meta platforms', 'facebook', 'fb'],
-  'TSLA': ['tesla', 'tesla motors', 'tesla inc'],
-  'NVDA': ['nvidia', 'nvidia corp', 'nvidia corporation'],
+  'AAPL': [
+    'apple', 'apple inc', 'apple computer',
+    // Products
+    'iphone', 'ipad', 'imac', 'macbook', 'airpods', 'apple watch', 'ios', 'macos',
+    'ipados', 'watchos', 'tvos', 'app store', 'itunes', 'icloud', 'apple tv', 'apple music',
+    'safari', 'siri', 'airtag', 'homepod', 'vision pro', 'apple vision',
+    // CEO/Founder
+    'tim cook', 'steve jobs'
+  ],
+  'MSFT': [
+    'microsoft', 'microsoft corp', 'microsoft corporation',
+    // Products
+    'windows', 'office 365', 'xbox', 'azure', 'teams', 'outlook', 'surface', 'bing',
+    'visual studio', 'github', 'linkedin', 'skype', 'onedrive', 'sharepoint', 'dynamics',
+    'power bi', 'windows 11', 'windows 10', 'copilot', 'edge browser',
+    // CEO
+    'satya nadella', 'bill gates'
+  ],
+  'GOOGL': [
+    'alphabet', 'google', 'alphabet inc', 'google parent',
+    // Products & Services
+    'youtube', 'android', 'chrome', 'gmail', 'google search', 'google maps', 'google cloud',
+    'waymo', 'google play', 'pixel', 'nest', 'fitbit', 'chromebook', 'google workspace',
+    'google ads', 'google photos', 'google drive', 'google docs', 'bard', 'gemini',
+    // CEO
+    'sundar pichai', 'larry page', 'sergey brin'
+  ],
+  'GOOG': [
+    'alphabet', 'google', 'alphabet inc', 'google parent',
+    'youtube', 'android', 'chrome', 'gmail', 'waymo', 'pixel', 'nest'
+  ],
+  'AMZN': [
+    'amazon', 'amazon.com', 'amazon inc',
+    // Products & Services
+    'aws', 'amazon web services', 'prime', 'prime video', 'kindle', 'alexa', 'echo',
+    'whole foods', 'twitch', 'audible', 'fire tv', 'amazon music', 'amazon fresh',
+    // CEO
+    'andy jassy', 'jeff bezos'
+  ],
+  'META': [
+    'meta', 'meta platforms', 'facebook', 'fb',
+    // Products & Subsidiaries
+    'instagram', 'whatsapp', 'oculus', 'quest', 'threads', 'messenger', 'reality labs',
+    'meta quest', 'llama', 'ray-ban stories',
+    // CEO
+    'mark zuckerberg', 'zuckerberg'
+  ],
+  'TSLA': ['tesla', 'tesla motors', 'tesla inc', 'elon musk', 'model s', 'model 3', 'model x', 'model y', 'cybertruck', 'powerwall', 'supercharger'],
+  'NVDA': [
+    'nvidia', 'nvidia corp', 'nvidia corporation',
+    // Products
+    'geforce', 'rtx', 'gtx', 'cuda', 'dgx', 'jetson', 'tegra', 'grace', 'hopper',
+    'omniverse', 'shield', 'nvlink',
+    // CEO
+    'jensen huang', 'jensen'
+  ],
   'NFLX': ['netflix', 'netflix inc'],
-  'INTC': ['intel', 'intel corp', 'intel corporation'],
-  'AMD': ['amd', 'advanced micro devices'],
-  'ADBE': ['adobe', 'adobe inc', 'adobe systems'],
-  'CSCO': ['cisco', 'cisco systems'],
-  'AVGO': ['broadcom', 'broadcom inc'],
-  'ORCL': ['oracle', 'oracle corp', 'oracle corporation'],
+  'INTC': ['intel', 'intel corp', 'intel corporation', 'core i7', 'core i9', 'xeon', 'celeron', 'pentium'],
+  'AMD': [
+    'amd', 'advanced micro devices',
+    // Products
+    'ryzen', 'radeon', 'epyc', 'threadripper', 'athlon', 'radeon rx', 'instinct',
+    // CEO
+    'lisa su'
+  ],
+  'ADBE': ['adobe', 'adobe inc', 'adobe systems', 'photoshop', 'illustrator', 'acrobat', 'creative cloud', 'premiere', 'after effects'],
+  'CSCO': ['cisco', 'cisco systems', 'webex'],
+  'AVGO': ['broadcom', 'broadcom inc', 'vmware'],
+  'ORCL': [
+    'oracle', 'oracle corp', 'oracle corporation',
+    // Products
+    'oracle database', 'oracle cloud', 'java', 'mysql', 'netsuiteoracle',
+    // CEO
+    'larry ellison', 'safra catz'
+  ],
   'CRM': ['salesforce', 'salesforce.com'],
   'QCOM': ['qualcomm', 'qualcomm inc'],
   'TXN': ['texas instruments', 'ti'],
-  'IBM': ['ibm', 'international business machines'],
+  'IBM': [
+    'ibm', 'international business machines',
+    // Products
+    'watson', 'red hat', 'ibm cloud', 'quantum system one', 'z systems', 'power systems',
+    // CEO
+    'arvind krishna'
+  ],
   'JPM': ['jpmorgan', 'jpmorgan chase', 'jp morgan'],
   'BAC': ['bank of america', 'bofa'],
   'WFC': ['wells fargo', 'wells fargo & company'],
@@ -111,15 +178,65 @@ const MANUAL_ALIASES: Record<string, string[]> = {
   'ENPH': ['enphase', 'enphase energy'],
   'BLNK': ['blink', 'blink charging'],
   'CHPT': ['chargepoint', 'chargepoint holdings'],
-  'QBTS': ['d-wave', 'd-wave quantum', 'dwave'],
-  'IONQ': ['ionq', 'ionq inc'],
-  'QUBT': ['quantum computing', 'quantum computing inc'],
-  'RGTI': ['rigetti', 'rigetti computing'],
-  'PLTR': ['palantir', 'palantir technologies'],
-  'ASML': ['asml', 'asml holding'],
-  'FN': ['fabrinet'],
-  'FTNT': ['fortinet', 'fortinet inc'],
-  'FDS': ['factset', 'factset research', 'factset research systems'],
+  'QBTS': [
+    'd-wave', 'd-wave quantum', 'dwave', 'd wave',
+    // Technology & Products
+    'quantum annealing', 'advantage quantum', 'leap quantum cloud',
+    // CEO
+    'alan baratz'
+  ],
+  'IONQ': [
+    'ionq', 'ionq inc',
+    // Technology & Products
+    'trapped ion', 'ionq forte', 'ionq aria',
+    // CEO
+    'peter chapman'
+  ],
+  'QUBT': [
+    'quantum computing', 'quantum computing inc', 'qci',
+    // Technology & Products
+    'reservoir computer', 'dirac', 'qatalyst'
+  ],
+  'RGTI': [
+    'rigetti', 'rigetti computing',
+    // Technology & Products
+    'superconducting quantum', 'rigetti cloud services', 'aspen quantum processor',
+    // CEO/Founder
+    'chad rigetti'
+  ],
+  'PLTR': [
+    'palantir', 'palantir technologies',
+    // Products
+    'gotham', 'foundry', 'apollo', 'artificial intelligence platform', 'aip',
+    // CEO
+    'alex karp', 'peter thiel'
+  ],
+  'ASML': [
+    'asml', 'asml holding',
+    // Products & Technology
+    'euv', 'extreme ultraviolet', 'lithography', 'twinscan', 'duv',
+    // CEO
+    'peter wennink', 'christophe fouquet'
+  ],
+  'FN': [
+    'fabrinet',
+    // CEO
+    'seamus grady'
+  ],
+  'FTNT': [
+    'fortinet', 'fortinet inc',
+    // Products
+    'fortigate', 'fortios', 'fortianalyzer', 'fortimanager', 'fortisiem', 'forticloud',
+    // CEO
+    'ken xie'
+  ],
+  'FDS': [
+    'factset', 'factset research', 'factset research systems',
+    // Products
+    'factset workstation',
+    // CEO
+    'philip snow'
+  ],
 };
 
 // Build the main mapping
@@ -227,14 +344,23 @@ export function extractTickersFromCompanyNames(text: string): string[] {
     'rose', 'fell', 'gained', 'lost', 'jumped', 'plunged', 'surged', 'dropped',
     'climbed', 'tumbled', 'rallied', 'declined', 'soared', 'slumped',
     'market cap', 'valuation', 'ipo', 'nasdaq:', 'nyse:', 'dow', 's&p',
+    'quarterly', 'financial', 'investors', 'investment', 'forecast', 'guidance',
   ];
 
   // Weaker context that needs company name to be capitalized or with other indicators
   const weakContext = [
-    'announces', 'announced', 'announce', 'ceo', 'cfo',
+    'announces', 'announced', 'announce', 'ceo', 'cfo', 'founder', 'chief',
     'inc.', 'inc', 'corp.', 'corp', 'corporation',
     'partnership', 'deal', 'merger', 'acquisition', 'acquires',
     'compete', 'competes', 'launches', 'launched', 'unveils', 'unveiled',
+    'releases', 'released', 'debuts', 'debuted', 'introduces', 'introduced',
+  ];
+
+  // Product/brand context - even weaker, but still relevant for tech companies
+  const productContext = [
+    'users', 'customers', 'platform', 'device', 'software', 'hardware', 'app',
+    'service', 'sales', 'sells', 'selling', 'sold', 'buy', 'buying', 'bought',
+    'upgrade', 'update', 'version', 'release', 'beta', 'features',
   ];
 
   // Check each company name/alias in our mapping
@@ -265,6 +391,9 @@ export function extractTickersFromCompanyNames(text: string): string[] {
       // Check for weak context
       const hasWeakContext = weakContext.some(word => contextWindow.includes(word));
 
+      // Check for product/brand context
+      const hasProductContext = productContext.some(word => contextWindow.includes(word));
+
       // Also check if the company name is capitalized in the original text (indicates proper noun)
       const originalContextStart = Math.max(0, matchIndex - 50);
       const originalContextEnd = Math.min(text.length, matchIndex + companyName.length + 50);
@@ -273,10 +402,19 @@ export function extractTickersFromCompanyNames(text: string): string[] {
       const capitalizedMatch = originalContextWindow.match(capitalizedPattern);
       const isCapitalized = capitalizedMatch && capitalizedMatch[0][0] === capitalizedMatch[0][0].toUpperCase();
 
+      // Determine if this is a product/brand name (lowercase in mapping indicates it's a product)
+      const isProductName = companyName === companyName.toLowerCase() &&
+                            companyName.length > 2 &&
+                            !['inc', 'corp', 'ltd', 'llc', 'the'].includes(companyName);
+
       // Accept if:
-      // 1. Strong context (stock, shares, earnings, etc.) OR
-      // 2. Weak context AND company name is capitalized (proper noun usage)
-      if (hasStrongContext || (hasWeakContext && isCapitalized)) {
+      // 1. Strong context (stock, shares, earnings, etc.) - always valid
+      // 2. Weak context AND capitalized - company announcements/news
+      // 3. Product context AND (is product name OR capitalized) - product mentions tie to company
+      // 4. Product/brand name mentioned (like "ios", "windows") with product context
+      if (hasStrongContext ||
+          (hasWeakContext && isCapitalized) ||
+          (hasProductContext && (isProductName || isCapitalized))) {
         tickers.forEach(ticker => foundTickers.add(ticker));
         break; // Found valid context for this company name
       }
