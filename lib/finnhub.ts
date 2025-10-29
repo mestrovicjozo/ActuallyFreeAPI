@@ -36,6 +36,7 @@ export interface StockData {
   volume?: number;
   marketCap?: number;
   timestamp: Date;
+  source: string;
 }
 
 const FINNHUB_API_KEY = process.env.FINNHUB_API || '';
@@ -133,6 +134,7 @@ class FinnhubClient {
         changePercent: quote.dp,
         marketCap: undefined, // We'll fetch this from profile if needed
         timestamp: new Date(quote.t * 1000), // Convert Unix timestamp to Date
+        source: 'finnhub',
       };
     } catch (error) {
       console.error(`Error getting stock data for ${ticker}:`, error);

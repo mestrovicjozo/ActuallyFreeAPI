@@ -3,7 +3,10 @@ import Parser from 'rss-parser';
 import { supabase } from '@/lib/supabase';
 import { RSS_FEEDS } from '@/config/rss-feeds';
 import { TRACKED_STOCKS } from '@/config/stock-tickers';
-import { finnhubClient } from '@/lib/finnhub';
+import { finnhubClient, StockData as FinnhubStockData } from '@/lib/finnhub';
+import { alphaVantageClient } from '@/lib/alphavantage';
+import { marketstackClient } from '@/lib/marketstack';
+import { polygonClient } from '@/lib/polygon';
 import type { NewsArticleInsert } from '@/lib/supabase';
 import { extractTickersFromArticle } from '@/lib/extractTickers';
 
@@ -28,36 +31,96 @@ interface StockFetchResult {
   error?: string;
 }
 
+// Helper function to average stock data from multiple sources
+function averageStockData(dataPoints: FinnhubStockData[], ticker: string, companyName: string): any {
+  if (dataPoints.length === 0) return null;
+
+  const avgPrice = dataPoints.reduce((sum, d) => sum + d.price, 0) / dataPoints.length;
+  const avgChange = dataPoints.reduce((sum, d) => sum + d.change, 0) / dataPoints.length;
+  const avgChangePercent = dataPoints.reduce((sum, d) => sum + d.changePercent, 0) / dataPoints.length;
+
+  // Get volume from the most recent source that has it
+  const volumeData = dataPoints.find(d => d.volume !== undefined);
+
+  return {
+    ticker,
+    company_name: companyName,
+    price: parseFloat(avgPrice.toFixed(4)),
+    change: parseFloat(avgChange.toFixed(4)),
+    change_percent: parseFloat(avgChangePercent.toFixed(4)),
+    volume: volumeData?.volume,
+    market_cap: volumeData?.marketCap,
+    source: 'averaged',
+  };
+}
+
 // Function to fetch and store stock prices
 async function fetchStockPrices(): Promise<StockFetchResult[]> {
   const results: StockFetchResult[] = [];
-  const now = new Date();
 
-  // We'll fetch 4 times per day: morning (9 AM), noon (12 PM), afternoon (3 PM), close (4 PM) EST
-  // Since cron runs once daily, we'll fetch all stocks 4 times in succession with timestamps
+  // Define which API to use for each timeframe
+  // Alpha Vantage: 9 AM (market open)
+  // Marketstack: 12 PM (midday)
+  // Polygon: 3 PM (afternoon)
+  // Average all three: 4 PM (market close)
   const tradingHours = [
-    { hour: 9, label: 'market-open' },
-    { hour: 12, label: 'midday' },
-    { hour: 15, label: 'afternoon' },
-    { hour: 16, label: 'market-close' }
+    { hour: 9, label: 'market-open', api: 'alphavantage', client: alphaVantageClient },
+    { hour: 12, label: 'midday', api: 'marketstack', client: marketstackClient },
+    { hour: 15, label: 'afternoon', api: 'polygon', client: polygonClient },
+    { hour: 16, label: 'market-close', api: 'averaged', client: null },
   ];
 
-  console.log(`Starting stock price fetch for ${TRACKED_STOCKS.length} stocks...`);
+  console.log(`Starting multi-API stock price fetch for ${TRACKED_STOCKS.length} stocks...`);
 
-  // Fetch stocks 4 times to simulate 4 snapshots per day
   for (const timeSlot of tradingHours) {
     const timestamp = new Date();
     timestamp.setHours(timeSlot.hour, 0, 0, 0);
 
     try {
-      console.log(`Fetching stock prices for ${timeSlot.label} (${timeSlot.hour}:00)...`);
+      console.log(`\n[${timeSlot.label}] Fetching stock prices using ${timeSlot.api}...`);
 
-      const stockData = await finnhubClient.getBatchStockData(
-        TRACKED_STOCKS.map(stock => ({
-          ticker: stock.ticker,
-          name: stock.name,
-        }))
-      );
+      let stockData: FinnhubStockData[] = [];
+
+      if (timeSlot.api === 'averaged') {
+        // For market close, fetch from all 3 APIs and average
+        console.log('[market-close] Fetching from all APIs for averaging...');
+
+        const [alphaData, marketData, polyData] = await Promise.all([
+          alphaVantageClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
+          marketstackClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
+          polygonClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
+        ]);
+
+        console.log(`Received: ${alphaData.length} from Alpha Vantage, ${marketData.length} from Marketstack, ${polyData.length} from Polygon`);
+
+        // Group data by ticker and average
+        const tickerMap = new Map<string, { data: FinnhubStockData[], name: string }>();
+
+        [alphaData, marketData, polyData].flat().forEach(data => {
+          if (!tickerMap.has(data.ticker)) {
+            tickerMap.set(data.ticker, { data: [], name: data.companyName });
+          }
+          tickerMap.get(data.ticker)!.data.push(data);
+        });
+
+        // Create averaged data points
+        stockData = Array.from(tickerMap.entries()).map(([ticker, { data, name }]) => {
+          const averaged = averageStockData(data, ticker, name);
+          averaged.timestamp = timestamp;
+          return averaged;
+        }).filter(d => d !== null);
+
+        console.log(`Created ${stockData.length} averaged data points`);
+
+      } else {
+        // Use the specific API for this timeframe
+        stockData = await timeSlot.client!.getBatchStockData(
+          TRACKED_STOCKS.map(stock => ({
+            ticker: stock.ticker,
+            name: stock.name,
+          }))
+        );
+      }
 
       if (stockData.length === 0) {
         results.push({
@@ -79,6 +142,7 @@ async function fetchStockPrices(): Promise<StockFetchResult[]> {
         volume: data.volume,
         market_cap: data.marketCap,
         timestamp: timestamp.toISOString(),
+        source: data.source,
       }));
 
       const { data, error } = await supabase
@@ -96,7 +160,7 @@ async function fetchStockPrices(): Promise<StockFetchResult[]> {
         });
       } else {
         const addedCount = data?.length || 0;
-        console.log(`Added ${addedCount} stock prices for ${timeSlot.label}`);
+        console.log(`✅ Added ${addedCount} stock prices for ${timeSlot.label} from ${timeSlot.api}`);
         results.push({
           timestamp: timestamp.toISOString(),
           success: true,
@@ -113,8 +177,8 @@ async function fetchStockPrices(): Promise<StockFetchResult[]> {
       });
     }
 
-    // Wait a bit between time slots (not strictly necessary but good practice)
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Wait between time slots
+    await new Promise(resolve => setTimeout(resolve, 3000));
   }
 
   return results;
