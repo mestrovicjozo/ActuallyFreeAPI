@@ -416,7 +416,7 @@ export function extractTickersFromCompanyNames(text: string): string[] {
           (hasWeakContext && isCapitalized) ||
           (hasProductContext && (isProductName || isCapitalized))) {
         tickers.forEach(ticker => foundTickers.add(ticker));
-        break; // Found valid context for this company name
+        // Continue checking other matches to find all mentions with valid context
       }
     }
   });

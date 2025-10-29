@@ -7,8 +7,11 @@ interface NewsQueryParams {
   search?: string;
   source?: string;
   ticker?: string;
+  tickers?: string;
   page?: string;
   limit?: string;
+  sort?: string;
+  order?: string;
 }
 
 export async function GET(request: NextRequest) {
@@ -21,8 +24,18 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const source = searchParams.get('source');
     const ticker = searchParams.get('ticker');
+    const tickers = searchParams.get('tickers');
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 per page
+    const sort = searchParams.get('sort') || 'pub_date';
+    const order = searchParams.get('order') || 'desc';
+
+    // Validate sort field
+    const validSortFields = ['pub_date', 'created_at', 'source'];
+    const sortField = validSortFields.includes(sort) ? sort : 'pub_date';
+
+    // Validate order
+    const ascending = order === 'asc';
 
     // Calculate pagination
     const from = (page - 1) * limit;
@@ -32,7 +45,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('news_articles')
       .select('*', { count: 'exact' })
-      .order('pub_date', { ascending: false });
+      .order(sortField, { ascending });
 
     // Apply date range filter
     if (startDate) {
@@ -69,14 +82,25 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply ticker filter (searches in tickers array)
-    if (ticker) {
-      // PostgreSQL array contains operator
+    // Support both single ticker and multiple tickers
+    if (tickers) {
+      // Multiple tickers support: ?tickers=AAPL,GOOGL,NVDA
+      const tickerArray = tickers.split(',').map(t => t.trim().toUpperCase()).filter(t => t);
+      if (tickerArray.length > 0) {
+        // Use overlaps operator to find articles containing ANY of the specified tickers
+        query = query.overlaps('tickers', tickerArray);
+      }
+    } else if (ticker) {
+      // Backward compatibility: single ticker support
       query = query.contains('tickers', [ticker.toUpperCase()]);
     }
 
-    // Apply search filter (searches in title and description)
+    // Apply search filter using full-text search
     if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+      // Use PostgreSQL full-text search with the existing GIN index
+      // This is much faster than ilike for large datasets
+      const searchQuery = search.trim().replace(/\s+/g, ' & ');
+      query = query.or(`title.fts.${searchQuery},description.fts.${searchQuery}`);
     }
 
     // Apply pagination
@@ -114,6 +138,11 @@ export async function GET(request: NextRequest) {
         search: search || null,
         source: source || null,
         ticker: ticker || null,
+        tickers: tickers || null,
+      },
+      sorting: {
+        sort: sortField,
+        order: order,
       },
     });
   } catch (error) {

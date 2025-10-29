@@ -57,9 +57,12 @@ Fetch news articles with optional filtering. Each article includes automatically
 **Query Parameters:**
 - `startDate` (string) - Filter from this date (ISO 8601 format)
 - `endDate` (string) - Filter until this date (ISO 8601 format)
-- `search` (string) - Search in title, description, and content
+- `search` (string) - Full-text search in title and description (optimized with PostgreSQL GIN index)
 - `source` (string) - Filter by specific source name
-- `tickers` (string) - Filter by stock tickers (comma-separated: AAPL,NVDA,META)
+- `ticker` (string) - Filter by single stock ticker (e.g., AAPL)
+- `tickers` (string) - Filter by multiple stock tickers (comma-separated: AAPL,NVDA,META)
+- `sort` (string) - Sort field: `pub_date` (default), `created_at`, or `source`
+- `order` (string) - Sort order: `desc` (default) or `asc`
 - `page` (number) - Page number (default: 1)
 - `limit` (number) - Results per page (max 100, default: 20)
 
@@ -74,11 +77,17 @@ Fetch news articles with optional filtering. Each article includes automatically
 # Get news mentioning Apple or NVIDIA
 curl "https://actually-free-api.vercel.app/api/news?tickers=AAPL,NVDA"
 
-# Search for quantum computing news
+# Search for quantum computing news (uses full-text search)
 curl "https://actually-free-api.vercel.app/api/news?search=quantum%20computing"
 
-# Get Tesla news from last week
-curl "https://actually-free-api.vercel.app/api/news?search=TSLA&limit=10"
+# Get Tesla news from last week, sorted by date ascending
+curl "https://actually-free-api.vercel.app/api/news?ticker=TSLA&limit=10&order=asc"
+
+# Get latest news sorted by source alphabetically
+curl "https://actually-free-api.vercel.app/api/news?sort=source&order=asc"
+
+# Search for AI news from multiple stocks
+curl "https://actually-free-api.vercel.app/api/news?tickers=NVDA,GOOGL,MSFT&search=artificial%20intelligence"
 ```
 
 #### GET /api/sources
