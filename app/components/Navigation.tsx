@@ -8,8 +8,7 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'News', icon: '📰', activeColor: 'purple' },
-    { href: '/stocks', label: 'Stocks', icon: '📈', activeColor: 'green' },
+    { href: '/', label: 'News API', icon: '📰', activeColor: 'purple' },
   ];
 
   return (

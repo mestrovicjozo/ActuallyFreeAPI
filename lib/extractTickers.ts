@@ -1,15 +1,17 @@
 /**
  * Robust stock ticker symbol extraction from text
- * Uses a three-tier approach:
+ * Uses a four-tier approach:
  * 1. Explicit ticker mentions ($AAPL, NASDAQ:GOOGL)
- * 2. Company name matching (Alphabet → GOOGL)
- * 3. Validation against tracked stocks only
+ * 2. Company name matching (Alphabet -> GOOGL)
+ * 3. NLP-based entity extraction (organizations, CEO names)
+ * 4. Validation against tracked stocks only
  */
 
 import {
   extractTickersFromCompanyNames,
   isTrackedTicker
 } from './ticker-mappings';
+import { extractTickersWithNLP } from './nlp-extractor';
 
 // Common stock exchanges
 const EXCHANGES = [
@@ -91,10 +93,58 @@ export function extractTickers(text: string): string[] {
     }
   }
 
+  // Pattern 6: Possessive mentions - "Apple's stock" -> AAPL
+  // This is handled by company name extraction, but we can also catch explicit tickers
+  const possessivePattern = /\b([A-Z]{2,5})'s\s+(?:stock|shares|price|earnings|revenue|profit|market)\b/gi;
+  while ((match = possessivePattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase();
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
+    }
+  }
+
+  // Pattern 7: "shares of X" pattern - "shares of Microsoft" -> MSFT
+  // Capture company names that will be resolved via company name extraction
+  const sharesOfPattern = /shares\s+of\s+([A-Z]{2,5})\b/gi;
+  while ((match = sharesOfPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase();
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
+    }
+  }
+
+  // Pattern 8: Movement mentions with percentage - "NVDA jumped 5%"
+  const movementPattern = /\b([A-Z]{2,5})\s+(?:jumped|surged|plunged|rose|fell|gained|lost|climbed|tumbled|rallied|dropped|soared|slumped|spiked|crashed)\s+\d+(?:\.\d+)?%/gi;
+  while ((match = movementPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase();
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
+    }
+  }
+
+  // Pattern 9: Price mentions - "AAPL at $150" or "NVDA trading at $800"
+  const pricePattern = /\b([A-Z]{2,5})\s+(?:at|trading\s+at|closed\s+at|opened\s+at)\s+\$\d+/gi;
+  while ((match = pricePattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase();
+    if (isTrackedTicker(ticker) && !isFalsePositive(ticker)) {
+      tickers.add(ticker);
+    }
+  }
+
   // TIER 2: Company name extraction (high confidence)
   // Extract tickers from company names like "Apple", "Alphabet", "Tesla"
   const companyTickers = extractTickersFromCompanyNames(text);
   companyTickers.forEach(ticker => tickers.add(ticker));
+
+  // TIER 3: NLP-based entity extraction (medium confidence)
+  // Uses compromise.js to extract organizations and person names
+  try {
+    const nlpTickers = extractTickersWithNLP(text);
+    nlpTickers.forEach(ticker => tickers.add(ticker));
+  } catch (error) {
+    // NLP extraction failed, continue with what we have
+    console.error('NLP extraction failed:', error);
+  }
 
   // Return sorted array of validated tickers
   return Array.from(tickers).sort();

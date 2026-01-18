@@ -161,6 +161,30 @@ export const RSS_FEEDS: RSSFeed[] = [
     category: 'education',
     description: 'Financial education and market news',
   },
+
+  // Google News - Stock Market (No API key needed)
+  {
+    name: 'Google News - Stock Market',
+    url: 'https://news.google.com/rss/search?q=stock+market+when:7d&hl=en-US&gl=US&ceid=US:en',
+    category: 'markets',
+    description: 'Google News aggregated stock news',
+  },
+
+  // SEC EDGAR - Official filings
+  {
+    name: 'SEC EDGAR 8-K Filings',
+    url: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=8-K&company=&dateb=&owner=include&count=40&output=atom',
+    category: 'filings',
+    description: 'SEC material event filings',
+  },
+
+  // Yahoo Finance additional feed
+  {
+    name: 'Yahoo Finance Top Stories',
+    url: 'https://finance.yahoo.com/rss/topfinstories',
+    category: 'markets',
+    description: 'Yahoo Finance top financial stories',
+  },
 ];
 
 // Helper function to get feeds by category

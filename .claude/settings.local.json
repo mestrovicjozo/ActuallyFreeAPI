@@ -32,7 +32,10 @@
       "Bash(git commit -m \"Update homepage with actual API domain\n\n- Replace placeholder URLs with https://actually-free-api.vercel.app\n- Users can now copy-paste working curl commands directly\n- Makes it clear this is a public API ready to use\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
       "Bash(npm install framer-motion)",
       "Bash(git add app/api/cron/fetch-rss/route.ts)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nAdd error handling for ticker extraction\n\n- Wrap ticker extraction in try-catch to prevent build failures\n- Log errors without breaking RSS fetch process\n- Ensures backward compatibility if database not migrated yet\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd error handling for ticker extraction\n\n- Wrap ticker extraction in try-catch to prevent build failures\n- Log errors without breaking RSS fetch process\n- Ensures backward compatibility if database not migrated yet\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(dir /b \"C:\\\\Users\\\\JozoPC\\\\Desktop\\\\Projects\\\\ActuallyFreeAPI\\\\*.md\")"
     ],
     "deny": [],
     "ask": []
