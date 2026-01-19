@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 import { supabase } from '@/lib/supabase';
 import { RSS_FEEDS } from '@/config/rss-feeds';
-import { TRACKED_STOCKS } from '@/config/stock-tickers';
-import { finnhubClient, StockData as FinnhubStockData } from '@/lib/finnhub';
-import { alphaVantageClient } from '@/lib/alphavantage';
-import { marketstackClient } from '@/lib/marketstack';
-import { polygonClient } from '@/lib/polygon';
 import type { NewsArticleInsert } from '@/lib/supabase';
 import { extractTickersFromArticle } from '@/lib/extractTickers';
 import { getArticleText } from '@/lib/article-fetcher';
@@ -23,166 +18,6 @@ interface FetchResult {
   success: boolean;
   articlesAdded: number;
   error?: string;
-}
-
-interface StockFetchResult {
-  timestamp: string;
-  success: boolean;
-  stocksAdded: number;
-  error?: string;
-}
-
-// Helper function to average stock data from multiple sources
-function averageStockData(dataPoints: FinnhubStockData[], ticker: string, companyName: string): any {
-  if (dataPoints.length === 0) return null;
-
-  const avgPrice = dataPoints.reduce((sum, d) => sum + d.price, 0) / dataPoints.length;
-  const avgChange = dataPoints.reduce((sum, d) => sum + d.change, 0) / dataPoints.length;
-  const avgChangePercent = dataPoints.reduce((sum, d) => sum + d.changePercent, 0) / dataPoints.length;
-
-  // Get volume from the most recent source that has it
-  const volumeData = dataPoints.find(d => d.volume !== undefined);
-
-  return {
-    ticker,
-    company_name: companyName,
-    price: parseFloat(avgPrice.toFixed(4)),
-    change: parseFloat(avgChange.toFixed(4)),
-    change_percent: parseFloat(avgChangePercent.toFixed(4)),
-    volume: volumeData?.volume,
-    market_cap: volumeData?.marketCap,
-    source: 'averaged',
-  };
-}
-
-// Function to fetch and store stock prices
-async function fetchStockPrices(): Promise<StockFetchResult[]> {
-  const results: StockFetchResult[] = [];
-
-  // Define which API to use for each timeframe
-  // Alpha Vantage: 9 AM (market open)
-  // Marketstack: 12 PM (midday)
-  // Polygon: 3 PM (afternoon)
-  // Average all three: 4 PM (market close)
-  const tradingHours = [
-    { hour: 9, label: 'market-open', api: 'alphavantage', client: alphaVantageClient },
-    { hour: 12, label: 'midday', api: 'marketstack', client: marketstackClient },
-    { hour: 15, label: 'afternoon', api: 'polygon', client: polygonClient },
-    { hour: 16, label: 'market-close', api: 'averaged', client: null },
-  ];
-
-  console.log(`Starting multi-API stock price fetch for ${TRACKED_STOCKS.length} stocks...`);
-
-  for (const timeSlot of tradingHours) {
-    const timestamp = new Date();
-    timestamp.setHours(timeSlot.hour, 0, 0, 0);
-
-    try {
-      console.log(`\n[${timeSlot.label}] Fetching stock prices using ${timeSlot.api}...`);
-
-      let stockData: FinnhubStockData[] = [];
-
-      if (timeSlot.api === 'averaged') {
-        // For market close, fetch from all 3 APIs and average
-        console.log('[market-close] Fetching from all APIs for averaging...');
-
-        const [alphaData, marketData, polyData] = await Promise.all([
-          alphaVantageClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
-          marketstackClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
-          polygonClient.getBatchStockData(TRACKED_STOCKS.map(s => ({ ticker: s.ticker, name: s.name }))),
-        ]);
-
-        console.log(`Received: ${alphaData.length} from Alpha Vantage, ${marketData.length} from Marketstack, ${polyData.length} from Polygon`);
-
-        // Group data by ticker and average
-        const tickerMap = new Map<string, { data: FinnhubStockData[], name: string }>();
-
-        [alphaData, marketData, polyData].flat().forEach(data => {
-          if (!tickerMap.has(data.ticker)) {
-            tickerMap.set(data.ticker, { data: [], name: data.companyName });
-          }
-          tickerMap.get(data.ticker)!.data.push(data);
-        });
-
-        // Create averaged data points
-        stockData = Array.from(tickerMap.entries()).map(([ticker, { data, name }]) => {
-          const averaged = averageStockData(data, ticker, name);
-          averaged.timestamp = timestamp;
-          return averaged;
-        }).filter(d => d !== null);
-
-        console.log(`Created ${stockData.length} averaged data points`);
-
-      } else {
-        // Use the specific API for this timeframe
-        stockData = await timeSlot.client!.getBatchStockData(
-          TRACKED_STOCKS.map(stock => ({
-            ticker: stock.ticker,
-            name: stock.name,
-          }))
-        );
-      }
-
-      if (stockData.length === 0) {
-        results.push({
-          timestamp: timestamp.toISOString(),
-          success: false,
-          stocksAdded: 0,
-          error: 'No stock data retrieved',
-        });
-        continue;
-      }
-
-      // Insert stock prices into database
-      const stockPrices = stockData.map(data => ({
-        ticker: data.ticker,
-        company_name: data.companyName,
-        price: data.price,
-        change: data.change,
-        change_percent: data.changePercent,
-        volume: data.volume,
-        market_cap: data.marketCap,
-        timestamp: timestamp.toISOString(),
-        source: data.source,
-      }));
-
-      const { data, error } = await supabase
-        .from('stock_prices')
-        .insert(stockPrices)
-        .select();
-
-      if (error) {
-        console.error(`Error inserting stock prices for ${timeSlot.label}:`, error);
-        results.push({
-          timestamp: timestamp.toISOString(),
-          success: false,
-          stocksAdded: 0,
-          error: error.message,
-        });
-      } else {
-        const addedCount = data?.length || 0;
-        console.log(`✅ Added ${addedCount} stock prices for ${timeSlot.label} from ${timeSlot.api}`);
-        results.push({
-          timestamp: timestamp.toISOString(),
-          success: true,
-          stocksAdded: addedCount,
-        });
-      }
-    } catch (error) {
-      console.error(`Error fetching stock prices for ${timeSlot.label}:`, error);
-      results.push({
-        timestamp: timestamp.toISOString(),
-        success: false,
-        stocksAdded: 0,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
-
-    // Wait between time slots
-    await new Promise(resolve => setTimeout(resolve, 3000));
-  }
-
-  return results;
 }
 
 export async function GET(request: NextRequest) {
@@ -385,63 +220,19 @@ export async function GET(request: NextRequest) {
     console.error('Error in cleanup:', error);
   }
 
-  // ============================================================================
-  // FETCH STOCK PRICES (4 snapshots per day)
-  // ============================================================================
-
-  console.log('\n=== Starting stock price fetch ===');
-  const stockResults = await fetchStockPrices();
-
-  // Clean up old stock prices (older than 90 days)
-  try {
-    const ninetyDaysAgo = new Date();
-    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-
-    const { error: deleteError } = await supabase
-      .from('stock_prices')
-      .delete()
-      .lt('timestamp', ninetyDaysAgo.toISOString());
-
-    if (deleteError) {
-      console.error('Error deleting old stock prices:', deleteError);
-    } else {
-      console.log('Successfully cleaned up old stock prices');
-    }
-  } catch (error) {
-    console.error('Error in stock cleanup:', error);
-  }
-
-  const totalStockPricesAdded = stockResults.reduce((sum, r) => sum + r.stocksAdded, 0);
-  const stockSuccessCount = stockResults.filter(r => r.success).length;
-
   const summary = {
     timestamp: new Date().toISOString(),
-    news: {
-      totalFeeds: RSS_FEEDS.length,
-      successful: totalSuccessful,
-      failed: totalFailed,
-      totalArticlesAdded,
-      results,
-    },
-    stocks: {
-      totalStocks: TRACKED_STOCKS.length,
-      snapshots: stockResults.length,
-      successfulSnapshots: stockSuccessCount,
-      totalStockPricesAdded,
-      results: stockResults,
-    },
+    totalFeeds: RSS_FEEDS.length,
+    successful: totalSuccessful,
+    failed: totalFailed,
+    totalArticlesAdded,
+    results,
   };
 
   console.log('Cron job completed:', {
-    news: {
-      totalArticlesAdded,
-      successful: totalSuccessful,
-      failed: totalFailed,
-    },
-    stocks: {
-      totalStockPricesAdded,
-      successfulSnapshots: stockSuccessCount,
-    },
+    totalArticlesAdded,
+    successful: totalSuccessful,
+    failed: totalFailed,
   });
 
   return NextResponse.json(summary);

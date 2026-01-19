@@ -1,4 +1,4 @@
-import { TRACKED_STOCKS } from '@/config/stock-tickers';
+import { INDEX_STOCKS, VALID_TICKERS, getAllTickers } from '@/config/index-constituents';
 
 /**
  * Company name variations and aliases mapped to ticker symbols
@@ -243,8 +243,8 @@ const MANUAL_ALIASES: Record<string, string[]> = {
 function buildCompanyNameMapping() {
   const mapping = new Map<string, string[]>();
 
-  // Add all tracked stocks with their base names
-  TRACKED_STOCKS.forEach(stock => {
+  // Add all index stocks with their base names
+  INDEX_STOCKS.forEach(stock => {
     const baseName = stock.name.toLowerCase()
       .replace(/\s+(inc\.?|corp\.?|corporation|company|co\.?|ltd\.?|llc|plc)$/i, '')
       .trim();
@@ -306,13 +306,12 @@ export function getTickersByCompanyName(companyName: string): string[] {
 }
 
 /**
- * Check if a ticker symbol is in our tracked list
+ * Check if a ticker symbol is in our tracked list (major index constituents)
  * @param ticker - The ticker symbol to check
  * @returns True if the ticker is tracked, false otherwise
  */
 export function isTrackedTicker(ticker: string): boolean {
-  const upperTicker = ticker.toUpperCase();
-  return TRACKED_STOCKS.some(stock => stock.ticker === upperTicker);
+  return VALID_TICKERS.has(ticker.toUpperCase());
 }
 
 /**
@@ -320,7 +319,7 @@ export function isTrackedTicker(ticker: string): boolean {
  * @returns Array of all tracked ticker symbols
  */
 export function getAllValidTickers(): string[] {
-  return TRACKED_STOCKS.map(stock => stock.ticker);
+  return getAllTickers();
 }
 
 /**

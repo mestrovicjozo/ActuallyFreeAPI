@@ -1,6 +1,6 @@
-# Free Financial News & Stock Tracking API
+# Free Financial News API
 
-A completely free REST API that aggregates financial news from 24+ major RSS feeds and tracks stock mentions with intelligent multi-tier ticker extraction. No setup required - just start using it.
+A completely free REST API that aggregates financial news from 24+ major RSS feeds and tracks stock mentions with intelligent multi-tier ticker extraction. Supports ~500+ stocks from major US indices (S&P 500, NASDAQ-100, Dow Jones 30). No setup required - just start using it.
 
 ## Quick Start
 
@@ -15,7 +15,7 @@ curl "https://actually-free-api.vercel.app/api/news"
 # Get news for specific stocks
 curl "https://actually-free-api.vercel.app/api/news?tickers=AAPL,NVDA"
 
-# Get stock price tracking data
+# Get all tracked stocks (~500+ from major indices)
 curl "https://actually-free-api.vercel.app/api/stocks"
 
 # Search news by keywords
@@ -23,6 +23,9 @@ curl "https://actually-free-api.vercel.app/api/news?search=quantum%20computing"
 
 # Filter by date range
 curl "https://actually-free-api.vercel.app/api/news?startDate=2024-01-01&endDate=2024-01-31"
+
+# Get S&P 500 stocks only
+curl "https://actually-free-api.vercel.app/api/stocks?index=SP500"
 ```
 
 ## Features
@@ -44,9 +47,10 @@ curl "https://actually-free-api.vercel.app/api/news?startDate=2024-01-01&endDate
 - **Daily Updates** - Automatically updated daily with fresh articles
 
 ### Stock Tracking API
-- **18 Portfolio Stocks** - Tracking AI, quantum computing, and tech stocks
-- **Stock Statistics** - Get price trends and mentions for tracked stocks
-- **Portfolio Focus** - Curated list based on actual investment portfolio
+- **500+ Stocks** - All major US index constituents (S&P 500, NASDAQ-100, Dow Jones 30)
+- **Ticker Mentions** - Track which stocks are mentioned in news articles
+- **Index Filtering** - Filter stocks by specific index (SP500, NASDAQ100, DOW30)
+- **Stock Search** - Search stocks by ticker or company name
 
 ## How Ticker Extraction Works
 
@@ -133,15 +137,38 @@ Get API statistics and database information.
 
 #### GET /api/stocks
 
-Get list of all tracked stocks from the portfolio.
+Get list of all tracked stocks from major US indices (~500+ stocks).
+
+**Query Parameters:**
+- `index` (string) - Filter by index: `SP500`, `NASDAQ100`, or `DOW30`
+- `ticker` (string) - Look up a specific ticker
+- `search` (string) - Search by ticker or company name
+
+**Examples:**
+```bash
+# Get all stocks
+curl "https://actually-free-api.vercel.app/api/stocks"
+
+# Get S&P 500 stocks
+curl "https://actually-free-api.vercel.app/api/stocks?index=SP500"
+
+# Look up a specific ticker
+curl "https://actually-free-api.vercel.app/api/stocks?ticker=AAPL"
+
+# Search for stocks
+curl "https://actually-free-api.vercel.app/api/stocks?search=apple"
+```
 
 #### GET /api/stocks/tickers
 
 Get array of all tracked ticker symbols.
 
+**Query Parameters:**
+- `index` (string) - Filter by index: `SP500`, `NASDAQ100`, or `DOW30`
+
 #### GET /api/stocks/stats
 
-Get statistics about stock mentions in news articles.
+Get statistics about stock mentions in news articles and index coverage.
 
 See the [live documentation](https://actually-free-api.vercel.app) for more examples and interactive demos.
 
@@ -165,7 +192,7 @@ ActuallyFreeAPI/
 │   └── page.tsx                  # Landing page
 ├── config/
 │   ├── rss-feeds.ts              # RSS feed configuration
-│   └── stock-tickers.ts          # Tracked stocks
+│   └── index-constituents.ts     # Major US index stocks (~500+)
 ├── database/
 │   ├── schema.sql                # Database schema
 │   └── README.md                 # Database setup guide
@@ -218,41 +245,38 @@ View complete list: `GET /api/sources`
 
 ## Tracked Stocks
 
-The API tracks 18 stocks from my personal investment portfolio, focusing on AI, quantum computing, and technology:
+The API tracks all major US index constituents - over 500 unique stocks:
 
-**Quantum Computing (4 stocks)**
-- QBTS - D-Wave Quantum
-- IONQ - IonQ
-- QUBT - Quantum Computing Inc.
-- RGTI - Rigetti Computing
+**S&P 500** (~500 stocks)
+The 500 largest US companies by market capitalization, including Apple, Microsoft, Amazon, Google, and more.
 
-**Tech Giants (5 stocks)**
-- META - Meta Platforms
-- NVDA - NVIDIA
-- MSFT - Microsoft
-- AMZN - Amazon
-- GOOGL - Alphabet (Google)
+**NASDAQ-100** (~100 stocks)
+The 100 largest non-financial companies on NASDAQ, including tech giants and growth companies.
 
-**Semiconductors & Tech (4 stocks)**
-- AMD - Advanced Micro Devices
-- AVGO - Broadcom
-- ASML - ASML Holding
-- FN - Fabrinet
+**Dow Jones Industrial Average** (30 stocks)
+The 30 blue-chip US companies representing major industries.
 
-**AI & Enterprise (5 stocks)**
-- PLTR - Palantir Technologies
-- ORCL - Oracle
-- IBM - IBM
-- FTNT - Fortinet
-- FDS - FactSet Research Systems
-
+**Intelligent Ticker Extraction**
 These stocks are automatically tracked in all news articles with intelligent extraction that recognizes:
 - Company names (Apple -> AAPL)
 - Product names (iOS -> AAPL, Windows -> MSFT)
 - Brand names (Instagram -> META, YouTube -> GOOGL)
 - CEO names (Jensen Huang -> NVDA, Mark Zuckerberg -> META)
 
-View current tracked stocks: `GET /api/stocks`
+**API Endpoints:**
+```bash
+# View all tracked stocks
+curl "https://actually-free-api.vercel.app/api/stocks"
+
+# View S&P 500 stocks only
+curl "https://actually-free-api.vercel.app/api/stocks?index=SP500"
+
+# View NASDAQ-100 stocks only
+curl "https://actually-free-api.vercel.app/api/stocks?index=NASDAQ100"
+
+# View Dow Jones 30 stocks only
+curl "https://actually-free-api.vercel.app/api/stocks?index=DOW30"
+```
 
 ## Self-Hosting
 

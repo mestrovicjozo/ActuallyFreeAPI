@@ -1,73 +1,81 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import {
+  INDEX_STOCKS,
+  VALID_TICKERS,
+  getStocksByIndex,
+  getIndices,
+  getStockInfo,
+  INDEX_STATS,
+  type IndexType
+} from '@/config/index-constituents';
 
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
 
-    // Query parameters
-    const ticker = searchParams.get('ticker');
-    const startDate = searchParams.get('start_date');
-    const endDate = searchParams.get('end_date');
-    const limit = parseInt(searchParams.get('limit') || '100');
-    const offset = parseInt(searchParams.get('offset') || '0');
+  // Filter by index
+  const indexParam = searchParams.get('index');
 
-    // Validate limit
-    if (limit > 1000) {
+  // Filter by ticker
+  const tickerParam = searchParams.get('ticker');
+
+  // Search by name
+  const searchParam = searchParams.get('search');
+
+  // If searching for a specific ticker
+  if (tickerParam) {
+    const stock = getStockInfo(tickerParam.toUpperCase());
+    if (stock) {
+      return NextResponse.json({
+        found: true,
+        stock,
+      });
+    }
+    return NextResponse.json({
+      found: false,
+      ticker: tickerParam.toUpperCase(),
+      message: 'Ticker not found in major indices',
+    });
+  }
+
+  // If filtering by index
+  if (indexParam) {
+    const validIndices = ['SP500', 'NASDAQ100', 'DOW30'];
+    if (!validIndices.includes(indexParam.toUpperCase())) {
       return NextResponse.json(
-        { error: 'Limit cannot exceed 1000' },
+        { error: `Invalid index. Valid options: ${validIndices.join(', ')}` },
         { status: 400 }
       );
     }
 
-    // Build query
-    let query = supabase
-      .from('stock_prices')
-      .select('*', { count: 'exact' });
+    const stocks = getStocksByIndex(indexParam.toUpperCase() as IndexType);
+    return NextResponse.json({
+      index: indexParam.toUpperCase(),
+      total: stocks.length,
+      stocks,
+    });
+  }
 
-    // Filter by ticker
-    if (ticker) {
-      query = query.eq('ticker', ticker.toUpperCase());
-    }
-
-    // Filter by date range
-    if (startDate) {
-      query = query.gte('timestamp', startDate);
-    }
-    if (endDate) {
-      query = query.lte('timestamp', endDate);
-    }
-
-    // Order by timestamp (most recent first)
-    query = query.order('timestamp', { ascending: false });
-
-    // Pagination
-    query = query.range(offset, offset + limit - 1);
-
-    const { data, error, count } = await query;
-
-    if (error) {
-      console.error('Error fetching stock prices:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch stock prices' },
-        { status: 500 }
-      );
-    }
+  // If searching by name
+  if (searchParam) {
+    const searchLower = searchParam.toLowerCase();
+    const matches = INDEX_STOCKS.filter(
+      stock =>
+        stock.ticker.toLowerCase().includes(searchLower) ||
+        stock.name.toLowerCase().includes(searchLower)
+    );
 
     return NextResponse.json({
-      data,
-      pagination: {
-        total: count,
-        limit,
-        offset,
-        returned: data?.length || 0,
-      },
+      search: searchParam,
+      total: matches.length,
+      stocks: matches,
     });
-  } catch (error) {
-    console.error('Error in stocks API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
   }
+
+  // Return all stocks
+  return NextResponse.json({
+    total: VALID_TICKERS.size,
+    indices: getIndices(),
+    stats: INDEX_STATS,
+    stocks: INDEX_STOCKS,
+  });
 }

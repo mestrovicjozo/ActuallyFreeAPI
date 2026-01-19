@@ -1,22 +1,37 @@
-import { NextResponse } from 'next/server';
-import { TRACKED_STOCKS, getStocksByIndex, getIndices } from '@/config/stock-tickers';
+import { NextRequest, NextResponse } from 'next/server';
+import {
+  getAllTickers,
+  getStocksByIndex,
+  VALID_TICKERS,
+  type IndexType
+} from '@/config/index-constituents';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const index = searchParams.get('index');
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const indexParam = searchParams.get('index');
 
-  if (index) {
-    const stocks = getStocksByIndex(index);
+  // If filtering by index
+  if (indexParam) {
+    const validIndices = ['SP500', 'NASDAQ100', 'DOW30'];
+    if (!validIndices.includes(indexParam.toUpperCase())) {
+      return NextResponse.json(
+        { error: `Invalid index. Valid options: ${validIndices.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    const stocks = getStocksByIndex(indexParam.toUpperCase() as IndexType);
     return NextResponse.json({
-      index,
+      index: indexParam.toUpperCase(),
       total: stocks.length,
-      stocks,
+      tickers: stocks.map(s => s.ticker),
     });
   }
 
+  // Return all tickers
+  const tickers = getAllTickers();
   return NextResponse.json({
-    total: TRACKED_STOCKS.length,
-    indices: getIndices(),
-    stocks: TRACKED_STOCKS,
+    total: VALID_TICKERS.size,
+    tickers,
   });
 }

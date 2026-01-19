@@ -35,7 +35,9 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd error handling for ticker extraction\n\n- Wrap ticker extraction in try-catch to prevent build failures\n- Log errors without breaking RSS fetch process\n- Ensures backward compatibility if database not migrated yet\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(cat:*)",
       "Bash(ls:*)",
-      "Bash(dir /b \"C:\\\\Users\\\\JozoPC\\\\Desktop\\\\Projects\\\\ActuallyFreeAPI\\\\*.md\")"
+      "Bash(dir /b \"C:\\\\Users\\\\JozoPC\\\\Desktop\\\\Projects\\\\ActuallyFreeAPI\\\\*.md\")",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [],
     "ask": []
