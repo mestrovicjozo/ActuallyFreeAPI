@@ -4,10 +4,12 @@ import { supabase } from '@/lib/supabase';
 import { RSS_FEEDS } from '@/config/rss-feeds';
 import type { NewsArticleInsert } from '@/lib/supabase';
 import { extractTickersFromArticle } from '@/lib/extractTickers';
-import { getArticleText } from '@/lib/article-fetcher';
+
+// Extend function timeout for cron job (max 60s on Vercel Hobby)
+export const maxDuration = 60;
 
 const parser = new Parser({
-  timeout: 10000,
+  timeout: 5000, // Reduced timeout for faster processing
   headers: {
     'User-Agent': 'Mozilla/5.0 (compatible; FinancialNewsAPI/1.0)',
   },
@@ -45,18 +47,11 @@ export async function GET(request: NextRequest) {
       console.log(`Fetching ${feed.name}...`);
       const rssFeed = await parser.parseURL(feed.url);
 
-      // Process RSS items and extract tickers
+      // Process RSS items and extract tickers from RSS content only
+      // Note: Full article fetching disabled to prevent timeout on Vercel Hobby (60s limit)
       const validItems = rssFeed.items.filter(item => item.link && item.title && item.pubDate);
 
-      // Collect articles that need full content fetch (no tickers from RSS snippet)
-      const articlesNeedingFullContent: Array<{
-        item: typeof validItems[0];
-        initialTickers: string[];
-      }> = [];
-
-      const articles: NewsArticleInsert[] = [];
-
-      for (const item of validItems) {
+      const articles: NewsArticleInsert[] = validItems.map(item => {
         const title = item.title!;
         const description = item.contentSnippet || item.content || null;
         const content = item.content || item.contentSnippet || null;
@@ -69,73 +64,7 @@ export async function GET(request: NextRequest) {
           console.error('Error extracting tickers:', error);
         }
 
-        // If no tickers found and article has a link, queue for full content fetch
-        if (tickers.length === 0 && item.link) {
-          articlesNeedingFullContent.push({ item, initialTickers: tickers });
-        } else {
-          articles.push({
-            title,
-            description,
-            link: item.link!,
-            pub_date: new Date(item.pubDate!).toISOString(),
-            source: feed.name,
-            guid: item.guid || item.link!,
-            content,
-            tickers: tickers.length > 0 ? tickers : null,
-          });
-        }
-      }
-
-      // Fetch full content for articles without tickers (limited to 5 per feed)
-      const articlesToFetch = articlesNeedingFullContent.slice(0, 5);
-      for (const { item } of articlesToFetch) {
-        try {
-          const fullText = await getArticleText(item.link!);
-          const title = item.title!;
-          const description = item.contentSnippet || item.content || null;
-
-          // Re-extract tickers with full article content
-          let tickers: string[] = [];
-          if (fullText) {
-            tickers = extractTickersFromArticle(title, description, fullText);
-          }
-
-          articles.push({
-            title,
-            description,
-            link: item.link!,
-            pub_date: new Date(item.pubDate!).toISOString(),
-            source: feed.name,
-            guid: item.guid || item.link!,
-            content: fullText || (item.content || item.contentSnippet || null),
-            tickers: tickers.length > 0 ? tickers : null,
-          });
-        } catch (error) {
-          // If full fetch fails, add article without full content
-          const title = item.title!;
-          const description = item.contentSnippet || item.content || null;
-          const content = item.content || item.contentSnippet || null;
-
-          articles.push({
-            title,
-            description,
-            link: item.link!,
-            pub_date: new Date(item.pubDate!).toISOString(),
-            source: feed.name,
-            guid: item.guid || item.link!,
-            content,
-            tickers: null,
-          });
-        }
-      }
-
-      // Add remaining articles that we didn't fetch full content for
-      for (const { item } of articlesNeedingFullContent.slice(5)) {
-        const title = item.title!;
-        const description = item.contentSnippet || item.content || null;
-        const content = item.content || item.contentSnippet || null;
-
-        articles.push({
+        return {
           title,
           description,
           link: item.link!,
@@ -143,9 +72,9 @@ export async function GET(request: NextRequest) {
           source: feed.name,
           guid: item.guid || item.link!,
           content,
-          tickers: null,
-        });
-      }
+          tickers: tickers.length > 0 ? tickers : null,
+        };
+      });
 
       if (articles.length === 0) {
         results.push({
@@ -197,8 +126,8 @@ export async function GET(request: NextRequest) {
       totalFailed++;
     }
 
-    // Small delay between requests to be respectful to RSS feeds
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Small delay between requests (reduced for serverless environment)
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
 
   // Clean up old articles (older than 30 days)

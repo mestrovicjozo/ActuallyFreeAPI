@@ -6,12 +6,12 @@ export interface RSSFeed {
 }
 
 export const RSS_FEEDS: RSSFeed[] = [
-  // Reuters
+  // NPR Business (Reuters discontinued their public RSS feeds)
   {
-    name: 'Reuters World News',
-    url: 'http://feeds.reuters.com/Reuters/worldNews',
+    name: 'NPR Business',
+    url: 'https://feeds.npr.org/1006/rss.xml',
     category: 'general',
-    description: 'Reuters world and business news',
+    description: 'NPR business news coverage',
   },
 
   // Yahoo Finance
