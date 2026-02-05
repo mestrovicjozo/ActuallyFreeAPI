@@ -2,61 +2,60 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 
 export default function Navigation() {
   const pathname = usePathname();
 
-  const navItems = [
-    { href: '/', label: 'News API', icon: '📰', activeColor: 'purple' },
+  const links = [
+    { href: '/', label: 'API Docs' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-gradient-to-b from-black/40 via-black/20 to-transparent border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
+
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3 group"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center group-hover:border-purple-400/50 transition-all">
-                <span className="text-2xl">🚀</span>
-              </div>
-              <div>
-                <h1 className="text-lg font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-                  Actually Free API
-                </h1>
-                <p className="text-xs text-gray-500">No auth required</p>
-              </div>
-            </motion.div>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-7 h-7 rounded-md bg-brand flex items-center justify-center">
+              <span className="text-zinc-950 font-heading font-extrabold text-[11px] leading-none">AF</span>
+            </div>
+            <span className="font-heading font-semibold text-zinc-100 text-sm tracking-tight">
+              ActuallyFreeAPI
+            </span>
           </Link>
 
-          {/* Navigation Items */}
-          <div className="flex gap-3">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              const colorClasses = isActive
-                ? item.activeColor === 'green'
-                  ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/50 text-green-300 shadow-lg shadow-green-500/20'
-                  : 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 text-purple-300 shadow-lg shadow-purple-500/20'
-                : 'bg-black/20 border-white/10 text-gray-400 hover:text-white hover:border-white/20 hover:bg-white/5';
+          {/* Nav Links */}
+          <div className="flex items-center gap-1">
+            {links.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  pathname === href
+                    ? 'text-brand bg-brand/10'
+                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
 
-              return (
-                <Link key={item.href} href={item.href}>
-                  <motion.div
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-5 py-2.5 rounded-xl font-semibold transition-all border backdrop-blur-sm ${colorClasses}`}
-                  >
-                    <span className="mr-2 text-lg">{item.icon}</span>
-                    <span className="hidden sm:inline">{item.label}</span>
-                  </motion.div>
-                </Link>
-              );
-            })}
+            <div className="w-px h-5 bg-zinc-800 mx-2" />
+
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-md text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors"
+              aria-label="GitHub repository"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>

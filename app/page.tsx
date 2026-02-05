@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-// RSS Feed data with categories
 const rssFeedsByCategory = {
   general: [
     { name: 'Reuters World News', description: 'Reuters world and business news' },
@@ -45,14 +44,24 @@ const rssFeedsByCategory = {
   ],
 };
 
-const categoryInfo: Record<string, { label: string; icon: string; color: string }> = {
-  general: { label: 'General News', icon: '📰', color: 'from-indigo-500 to-purple-500' },
-  markets: { label: 'Markets', icon: '📈', color: 'from-cyan-500 to-blue-500' },
-  technology: { label: 'Technology', icon: '💻', color: 'from-emerald-500 to-green-500' },
-  business: { label: 'Business', icon: '💼', color: 'from-amber-500 to-orange-500' },
-  investing: { label: 'Investing', icon: '💰', color: 'from-pink-500 to-rose-500' },
-  stocks: { label: 'Stocks', icon: '📊', color: 'from-violet-500 to-purple-500' },
-  other: { label: 'Specialized', icon: '🎯', color: 'from-teal-500 to-cyan-500' },
+const categoryLabels: Record<string, string> = {
+  general: 'General',
+  markets: 'Markets',
+  technology: 'Technology',
+  business: 'Business',
+  investing: 'Investing',
+  stocks: 'Stocks',
+  other: 'Specialized',
+};
+
+const categoryDotColors: Record<string, string> = {
+  general: 'bg-blue-400',
+  markets: 'bg-cyan-400',
+  technology: 'bg-emerald-400',
+  business: 'bg-amber-400',
+  investing: 'bg-rose-400',
+  stocks: 'bg-violet-400',
+  other: 'bg-zinc-400',
 };
 
 export default function Home() {
@@ -68,10 +77,7 @@ export default function Home() {
         setArticleCount(data.totalArticles);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Failed to fetch stats:', err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
   const copyToClipboard = (text: string, index: number) => {
@@ -79,6 +85,8 @@ export default function Home() {
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
   };
+
+  const totalFeeds = Object.values(rssFeedsByCategory).reduce((acc, feeds) => acc + feeds.length, 0);
 
   const exampleResponse = {
     data: [
@@ -118,531 +126,456 @@ export default function Home() {
     }
   ];
 
+  const endpoints = [
+    { path: '/api/news', description: 'Fetch news articles with filtering, search, ticker symbols, and pagination' },
+    { path: '/api/sources', description: 'List all RSS feed sources organized by category' },
+    { path: '/api/stats', description: 'Get API statistics including article counts and database info' },
+  ];
+
   const features = [
     {
       title: 'No Authentication',
-      description: 'Start immediately - no API keys, no signup, no hassle',
-      icon: '🔓',
-      gradient: 'from-green-400 to-emerald-500'
+      description: 'Start immediately. No API keys, no signup, no billing.',
+      icon: (
+        <svg className="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+        </svg>
+      ),
     },
     {
-      title: '24 RSS Feeds',
-      description: 'Reuters, Bloomberg, CNBC, WSJ and 20+ premium sources',
-      icon: '📡',
-      gradient: 'from-blue-400 to-cyan-500'
+      title: '24+ RSS Feeds',
+      description: 'Reuters, Bloomberg, CNBC, WSJ, and 20+ premium sources.',
+      icon: (
+        <svg className="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 110-2 1 1 0 010 2z" />
+        </svg>
+      ),
     },
     {
       title: 'Ticker Extraction',
-      description: 'Automatic NLP-powered stock symbol detection',
-      icon: '🎯',
-      gradient: 'from-purple-400 to-pink-500'
+      description: 'Automatic NLP-powered stock symbol detection on every article.',
+      icon: (
+        <svg className="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+      ),
     },
     {
       title: '30-Day Archive',
-      description: 'Access historical financial news data',
-      icon: '📅',
-      gradient: 'from-orange-400 to-red-500'
-    }
+      description: 'Access historical financial news data with date range queries.',
+      icon: (
+        <svg className="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
   ];
 
-  // Calculate total feeds
-  const totalFeeds = Object.values(rssFeedsByCategory).reduce((acc, feeds) => acc + feeds.length, 0);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-1.5s' }}></div>
-      </div>
-
-      {/* Hero Section */}
-      <div className="relative max-w-7xl mx-auto px-4 pt-20 pb-8 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-16"
-        >
-          {/* Badge */}
+    <div className="min-h-screen">
+      {/* Hero */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-4xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-8"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/60 mb-8"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
             </span>
-            <span className="text-sm text-purple-200 font-medium">Live API • Always Free</span>
+            <span className="text-xs text-zinc-400 font-medium font-body">Live &middot; Always Free</span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-tight"
+            transition={{ duration: 0.5, delay: 0.08 }}
+            className="font-heading text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6"
           >
-            <span className="bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-              Financial News API
-            </span>
+            <span className="text-zinc-100">Financial News API.</span>
             <br />
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-gradient">
-              Actually Free
+            <span className="relative">
+              <span className="absolute -inset-x-6 -inset-y-2 bg-brand/5 blur-2xl rounded-full pointer-events-none" />
+              <span className="relative text-brand">Actually Free.</span>
             </span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-lg sm:text-xl text-gray-300 mb-4 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.16 }}
+            className="text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed font-body"
           >
-            Access <span className="font-bold text-purple-400">{totalFeeds} RSS feeds</span> from premium financial sources.
-            <br />
-            Real-time news with <span className="font-bold text-cyan-400">automatic ticker extraction</span>.
+            Instant access to financial news from {totalFeeds} premium sources.
+            No API keys, no rate limits, no credit card. Just data.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex items-center justify-center gap-3 text-gray-400 mb-10 flex-wrap"
-          >
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              No API keys
-            </span>
-            <span className="text-gray-600">•</span>
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              No rate limits
-            </span>
-            <span className="text-gray-600">•</span>
-            <span className="flex items-center gap-1">
-              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              No credit card
-            </span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="flex gap-4 justify-center flex-wrap"
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="flex gap-3"
           >
-            <motion.a
-              href="#try-it"
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl font-semibold text-lg transition-all shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50"
+            <a
+              href="#quickstart"
+              className="px-5 py-2.5 bg-brand text-zinc-950 rounded-lg font-semibold text-sm hover:brightness-110 transition-all"
             >
-              Try It Now
-            </motion.a>
-            <motion.a
-              href="#sources"
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 glass glass-hover rounded-xl text-purple-200 font-semibold text-lg transition-all"
+              Get Started
+            </a>
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 border border-zinc-700 text-zinc-300 rounded-lg font-semibold text-sm hover:bg-zinc-800/60 hover:border-zinc-600 transition-colors"
             >
-              View Sources
-            </motion.a>
+              View Source
+            </a>
           </motion.div>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Stats Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          className="flex justify-center mb-20"
-        >
-          <div className="glass rounded-2xl p-8 shadow-2xl shadow-purple-500/10">
-            <div className="flex flex-col sm:flex-row items-center gap-8">
-              <div className="text-center">
-                <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">Articles Available</p>
-                {loading ? (
-                  <div className="h-12 w-32 bg-purple-500/20 rounded-lg animate-pulse"></div>
-                ) : (
-                  <motion.p
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                    className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    {articleCount?.toLocaleString() || '0'}
-                  </motion.p>
-                )}
-              </div>
-              <div className="hidden sm:block w-px h-16 bg-purple-500/30"></div>
-              <div className="text-center">
-                <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">News Sources</p>
-                <p className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  {totalFeeds}
-                </p>
-              </div>
-              <div className="hidden sm:block w-px h-16 bg-purple-500/30"></div>
-              <div className="text-center">
-                <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">Categories</p>
-                <p className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
-                  {Object.keys(rssFeedsByCategory).length}
-                </p>
-              </div>
+      {/* Stats Bar */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="border-y border-zinc-800/60 bg-zinc-900/20"
+      >
+        <div className="max-w-6xl mx-auto px-6 py-6">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100">
+                {loading ? '\u2014' : articleCount?.toLocaleString()}
+              </p>
+              <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-body">Articles</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100">{totalFeeds}</p>
+              <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-body">Sources</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-heading font-bold text-zinc-100">
+                {Object.keys(rssFeedsByCategory).length}
+              </p>
+              <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-body">Categories</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-heading font-bold text-brand">Free</p>
+              <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-body">Forever</p>
             </div>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.section>
 
-      {/* Main Content */}
-      <div className="relative max-w-7xl mx-auto px-4 pb-16 sm:px-6 lg:px-8">
+      {/* Quick Start */}
+      <motion.section
+        id="quickstart"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 px-6"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-zinc-100 mb-3">Quick Start</h2>
+          <p className="text-zinc-400 font-body mb-10">Copy and paste to start fetching data.</p>
 
-        {/* RSS Sources Section */}
-        <motion.section
-          id="sources"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              Premium News Sources
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Aggregating {totalFeeds} RSS feeds from the world&apos;s most trusted financial news outlets
-            </p>
+          <div className="grid md:grid-cols-2 gap-3">
+            {examples.map((example, i) => (
+              <div
+                key={i}
+                className="group rounded-lg border border-zinc-800 bg-zinc-900/40 overflow-hidden hover:border-zinc-700 transition-colors"
+              >
+                <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/60">
+                  <div>
+                    <p className="text-sm font-medium text-zinc-200">{example.title}</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">{example.description}</p>
+                  </div>
+                  <button
+                    onClick={() => copyToClipboard(example.code, i)}
+                    className="shrink-0 ml-3 px-2.5 py-1 text-xs rounded-md border border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-colors"
+                  >
+                    {copiedIndex === i ? 'Copied' : 'Copy'}
+                  </button>
+                </div>
+                <div className="px-4 py-3 overflow-x-auto">
+                  <code className="text-sm font-mono text-brand whitespace-nowrap">
+                    <span className="text-zinc-500">$ </span>{example.code}
+                  </code>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+      </motion.section>
 
-          {/* Category Pills */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
+      {/* JSON Response Preview */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 px-6 bg-zinc-900/20"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-zinc-100 mb-3">API Response</h2>
+          <p className="text-zinc-400 font-body mb-10">
+            Structured JSON with article metadata, summaries, and extracted ticker symbols.
+          </p>
+
+          <div className="rounded-xl border border-zinc-800 overflow-hidden">
+            {/* Terminal header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-zinc-700"></div>
+                  <div className="w-3 h-3 rounded-full bg-zinc-700"></div>
+                  <div className="w-3 h-3 rounded-full bg-zinc-700"></div>
+                </div>
+                <div className="flex items-center gap-2 ml-2">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
+                    GET
+                  </span>
+                  <span className="text-xs font-mono text-zinc-400">/api/news</span>
+                </div>
+              </div>
+              <button
+                onClick={() => copyToClipboard(JSON.stringify(exampleResponse, null, 2), 999)}
+                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors font-medium"
+              >
+                {copiedIndex === 999 ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+
+            {/* JSON body */}
+            <div className="p-5 overflow-x-auto max-h-[420px] overflow-y-auto bg-zinc-950/60">
+              <pre className="text-sm font-mono leading-6">
+                {JSON.stringify(exampleResponse, null, 2).split('\n').map((line, i) => (
+                  <div key={i} className="hover:bg-zinc-800/30 px-2 -mx-2 rounded">
+                    <JsonLine line={line} />
+                  </div>
+                ))}
+              </pre>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* News Sources */}
+      <motion.section
+        id="sources"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 px-6"
+      >
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-zinc-100 mb-3">News Sources</h2>
+          <p className="text-zinc-400 font-body mb-8">
+            Aggregating {totalFeeds} feeds from trusted financial outlets.
+          </p>
+
+          {/* Filter pills */}
+          <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 activeCategory === null
-                  ? 'bg-purple-500 text-white'
-                  : 'glass text-gray-300 hover:text-white'
+                  ? 'bg-brand/15 text-brand border border-brand/30'
+                  : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
               }`}
             >
-              All Sources ({totalFeeds})
+              All ({totalFeeds})
             </button>
-            {Object.entries(categoryInfo).map(([key, { label, icon }]) => (
+            {Object.entries(categoryLabels).map(([key, label]) => (
               <button
                 key={key}
                 onClick={() => setActiveCategory(activeCategory === key ? null : key)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   activeCategory === key
-                    ? 'bg-purple-500 text-white'
-                    : 'glass text-gray-300 hover:text-white'
+                    ? 'bg-brand/15 text-brand border border-brand/30'
+                    : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                 }`}
               >
-                <span>{icon}</span>
                 {label} ({rssFeedsByCategory[key as keyof typeof rssFeedsByCategory]?.length || 0})
               </button>
             ))}
           </div>
 
-          {/* Sources Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Source cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Object.entries(rssFeedsByCategory)
               .filter(([category]) => activeCategory === null || activeCategory === category)
-              .map(([category, feeds]) => (
+              .flatMap(([category, feeds]) =>
                 feeds.map((feed, idx) => (
-                  <motion.div
+                  <div
                     key={`${category}-${idx}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: idx * 0.02 }}
-                    whileHover={{ y: -3, scale: 1.01 }}
-                    className="glass glass-hover rounded-xl p-5 transition-all"
+                    className="flex items-center gap-3 p-4 rounded-lg border border-zinc-800/60 hover:border-zinc-700 bg-zinc-900/30 transition-colors"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl">{categoryInfo[category]?.icon || '📄'}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-white truncate">{feed.name}</h3>
-                        </div>
-                        <p className="text-sm text-gray-400 line-clamp-1">{feed.description}</p>
-                        <span className={`inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${categoryInfo[category]?.color || 'from-gray-500 to-gray-600'} text-white`}>
-                          {categoryInfo[category]?.label || category}
-                        </span>
-                      </div>
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${categoryDotColors[category] || 'bg-zinc-400'}`} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-zinc-200 truncate">{feed.name}</p>
+                      <p className="text-xs text-zinc-500">{categoryLabels[category] || category}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))
-              ))}
+              )}
           </div>
-        </motion.section>
+        </div>
+      </motion.section>
 
-        {/* Features Grid */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              Why Use This API?
-            </h2>
-            <p className="text-gray-400 text-lg">Built for developers who need financial data without the hassle</p>
-          </div>
+      {/* API Endpoints */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 px-6 bg-zinc-900/20"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-zinc-100 mb-3">Endpoints</h2>
+          <p className="text-zinc-400 font-body mb-10">Three endpoints to power your application.</p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <motion.div
+          <div className="space-y-3">
+            {endpoints.map((ep, i) => (
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group relative"
+                className="flex flex-col sm:flex-row sm:items-center gap-3 p-5 rounded-lg border border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-colors"
               >
-                <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl blur-xl -z-10"
-                  style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }}
-                ></div>
-                <div className="glass glass-hover rounded-2xl p-6 h-full transition-all">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-2xl mb-4 shadow-lg`}>
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-lg font-bold mb-2 text-white">{feature.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
+                    GET
+                  </span>
+                  <code className="text-sm font-mono text-zinc-100">{ep.path}</code>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* JSON Response Preview */}
-        <motion.section
-          id="try-it"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              What You&apos;ll Get
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Clean, structured JSON with article metadata, summaries, and extracted ticker symbols
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="glass rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/10">
-              {/* Terminal Header */}
-              <div className="bg-slate-900/80 px-4 py-3 flex items-center justify-between border-b border-purple-500/20">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <span className="text-sm text-purple-300 font-mono flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                  GET /api/news
-                </span>
-                <button
-                  onClick={() => copyToClipboard(JSON.stringify(exampleResponse, null, 2), 999)}
-                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
-                >
-                  {copiedIndex === 999 ? '✓ Copied!' : 'Copy'}
-                </button>
+                <p className="text-sm text-zinc-400 font-body">{ep.description}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
 
-              {/* JSON Content */}
-              <div className="p-6 overflow-x-auto max-h-[400px] overflow-y-auto bg-slate-950/50">
-                <pre className="text-sm font-mono">
-                  <code className="text-gray-300">
-                    {JSON.stringify(exampleResponse, null, 2)
-                      .split('\n')
-                      .map((line, i) => (
-                        <div key={i} className="hover:bg-purple-500/5">
-                          {line.includes('"') && line.includes(':') ? (
-                            <>
-                              <span className="text-purple-400">{line.split(':')[0]}:</span>
-                              <span className="text-emerald-400">{line.split(':').slice(1).join(':')}</span>
-                            </>
-                          ) : (
-                            <span>{line}</span>
-                          )}
-                        </div>
-                      ))}
-                  </code>
-                </pre>
+      {/* Features */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+        className="py-20 px-6"
+      >
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-zinc-100 mb-10">
+            Why This API?
+          </h2>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="p-5 rounded-lg border border-zinc-800/60 hover:border-zinc-700 transition-colors"
+              >
+                <div className="w-9 h-9 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center mb-4">
+                  {f.icon}
+                </div>
+                <h3 className="text-sm font-semibold text-zinc-100 mb-1.5">{f.title}</h3>
+                <p className="text-xs text-zinc-500 leading-relaxed font-body">{f.description}</p>
               </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Quick Start Examples */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              Quick Start
-            </h2>
-            <p className="text-gray-400 text-lg">Copy and paste to start fetching financial news instantly</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-4">
-            {examples.map((example, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.05 }}
-                whileHover={{ y: -3 }}
-                className="glass glass-hover rounded-xl overflow-hidden transition-all"
-              >
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-bold text-white mb-1">{example.title}</h3>
-                      <p className="text-sm text-gray-400">{example.description}</p>
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(example.code, i)}
-                      className="shrink-0 px-3 py-1 text-sm bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors font-medium border border-purple-500/30"
-                    >
-                      {copiedIndex === i ? '✓' : 'Copy'}
-                    </button>
-                  </div>
-                  <div className="bg-slate-950/60 rounded-lg p-3 overflow-x-auto border border-purple-500/20">
-                    <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
-                      {example.code}
-                    </code>
-                  </div>
-                </div>
-              </motion.div>
             ))}
           </div>
-        </motion.section>
+        </div>
+      </motion.section>
 
-        {/* API Endpoints */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              API Endpoints
-            </h2>
-            <p className="text-gray-400 text-lg">Three simple endpoints to power your application</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
-            {[
-              {
-                method: 'GET',
-                path: '/api/news',
-                description: 'Fetch news with filtering, search, ticker symbols, and pagination',
-                color: 'from-emerald-500 to-green-500'
-              },
-              {
-                method: 'GET',
-                path: '/api/sources',
-                description: 'List all RSS feed sources organized by category',
-                color: 'from-blue-500 to-cyan-500'
-              },
-              {
-                method: 'GET',
-                path: '/api/stats',
-                description: 'Get API statistics, article counts, and database info',
-                color: 'from-purple-500 to-pink-500'
-              }
-            ].map((endpoint, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="glass glass-hover rounded-2xl p-6 transition-all"
-              >
-                <div className={`inline-block px-3 py-1 bg-gradient-to-r ${endpoint.color} text-white rounded-lg text-sm font-bold mb-3`}>
-                  {endpoint.method}
-                </div>
-                <h3 className="text-lg font-bold text-white font-mono mb-2">
-                  {endpoint.path}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {endpoint.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* Footer */}
-        <motion.footer
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center pt-12 pb-8"
-        >
-          <div className="glass rounded-2xl p-8">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-2xl">🚀</span>
-              <span className="text-xl font-bold text-white">ActuallyFreeAPI</span>
+      {/* Footer */}
+      <footer className="border-t border-zinc-800/60 py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded bg-brand flex items-center justify-center">
+              <span className="text-zinc-950 font-heading font-extrabold text-[7px] leading-none">AF</span>
             </div>
-            <p className="text-gray-400 mb-6">
-              Built with Next.js, Supabase & Vercel
-            </p>
-            <div className="flex gap-6 justify-center mb-6">
-              <motion.a
-                href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -2 }}
-                className="flex items-center gap-2 text-purple-400 font-semibold hover:text-purple-300 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                </svg>
-                GitHub
-              </motion.a>
-              <span className="text-gray-600">•</span>
-              <motion.a
-                href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -2 }}
-                className="text-purple-400 font-semibold hover:text-purple-300 transition-colors"
-              >
-                Documentation
-              </motion.a>
-            </div>
-            <p className="text-sm text-gray-500">
-              Making financial news accessible to everyone
-            </p>
+            <span className="text-sm text-zinc-400 font-body">ActuallyFreeAPI</span>
           </div>
-        </motion.footer>
-      </div>
+
+          <div className="flex items-center gap-6">
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://github.com/mestrovicjozo/ActuallyFreeAPI#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Documentation
+            </a>
+          </div>
+
+          <p className="text-xs text-zinc-600 font-body">Built with Next.js &amp; Supabase</p>
+        </div>
+      </footer>
     </div>
   );
+}
+
+/* ── JSON Syntax Highlighting ── */
+
+function JsonLine({ line }: { line: string }) {
+  // Key-value pairs: "key": value
+  const kvMatch = line.match(/^(\s*)"([^"]+)"(\s*:\s*)(.*)/);
+  if (kvMatch) {
+    const [, indent, key, colon, rest] = kvMatch;
+    return (
+      <>
+        <span>{indent}</span>
+        <span className="text-brand">&quot;{key}&quot;</span>
+        <span className="text-zinc-600">{colon}</span>
+        <ValueSpan value={rest} />
+      </>
+    );
+  }
+
+  // Standalone string values in arrays: "value",
+  const strMatch = line.match(/^(\s*)"([^"]*)"(,?\s*)$/);
+  if (strMatch) {
+    const [, indent, str, trailing] = strMatch;
+    return (
+      <>
+        <span>{indent}</span>
+        <span className="text-sky-400">&quot;{str}&quot;</span>
+        <span className="text-zinc-600">{trailing}</span>
+      </>
+    );
+  }
+
+  // Structural characters
+  return <span className="text-zinc-600">{line}</span>;
+}
+
+function ValueSpan({ value }: { value: string }) {
+  const trimmed = value.trimEnd();
+  const hasComma = trimmed.endsWith(',');
+  const core = hasComma ? trimmed.slice(0, -1).trim() : trimmed.trim();
+  const comma = hasComma ? ',' : '';
+
+  if (core.startsWith('"') && core.endsWith('"')) {
+    return <><span className="text-sky-400">{core}</span><span className="text-zinc-600">{comma}</span></>;
+  }
+  if (/^\d+$/.test(core)) {
+    return <><span className="text-amber-400">{core}</span><span className="text-zinc-600">{comma}</span></>;
+  }
+  if (core === 'true' || core === 'false') {
+    return <><span className="text-rose-400">{core}</span><span className="text-zinc-600">{comma}</span></>;
+  }
+  if (core === 'null') {
+    return <><span className="text-zinc-500">{core}</span><span className="text-zinc-600">{comma}</span></>;
+  }
+  return <span className="text-zinc-500">{value}</span>;
 }
