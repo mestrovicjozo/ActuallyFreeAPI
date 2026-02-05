@@ -97,10 +97,10 @@ export async function GET(request: NextRequest) {
 
     // Apply search filter using full-text search
     if (search) {
-      // Use PostgreSQL full-text search with the existing GIN index
-      // This is much faster than ilike for large datasets
-      const searchQuery = search.trim().replace(/\s+/g, ' & ');
-      query = query.or(`title.fts.${searchQuery},description.fts.${searchQuery}`);
+      // Use plainto_tsquery (plfts) which treats input as plain text
+      // and does not interpret FTS operators, preventing injection attacks
+      const searchQuery = search.trim();
+      query = query.or(`title.plfts.${searchQuery},description.plfts.${searchQuery}`);
     }
 
     // Apply pagination
