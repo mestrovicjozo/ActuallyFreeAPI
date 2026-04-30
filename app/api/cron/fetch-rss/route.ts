@@ -19,7 +19,6 @@ interface FetchResult {
   source: string;
   success: boolean;
   articlesAdded: number;
-  error?: string;
 }
 
 export async function GET(request: NextRequest) {
@@ -27,7 +26,15 @@ export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret) {
+    console.error('CRON_SECRET environment variable is not configured');
+    return NextResponse.json(
+      { error: 'Server misconfiguration' },
+      { status: 500 }
+    );
+  }
+
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
@@ -101,7 +108,6 @@ export async function GET(request: NextRequest) {
           source: feed.name,
           success: false,
           articlesAdded: 0,
-          error: error.message,
         });
         totalFailed++;
       } else {
@@ -121,7 +127,6 @@ export async function GET(request: NextRequest) {
         source: feed.name,
         success: false,
         articlesAdded: 0,
-        error: error instanceof Error ? error.message : 'Unknown error',
       });
       totalFailed++;
     }

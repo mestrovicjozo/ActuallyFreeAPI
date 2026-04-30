@@ -18,15 +18,15 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
 
-    // Parse query parameters
+    // Parse and validate query parameters
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
-    const search = searchParams.get('search');
-    const source = searchParams.get('source');
-    const ticker = searchParams.get('ticker');
-    const tickers = searchParams.get('tickers');
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 per page
+    const search = searchParams.get('search')?.slice(0, 200) || null;
+    const source = searchParams.get('source')?.slice(0, 100) || null;
+    const ticker = searchParams.get('ticker')?.slice(0, 10) || null;
+    const tickers = searchParams.get('tickers')?.slice(0, 200) || null;
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '20', 10) || 20), 100);
     const sort = searchParams.get('sort') || 'pub_date';
     const order = searchParams.get('order') || 'desc';
 
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
     // Support both single ticker and multiple tickers
     if (tickers) {
       // Multiple tickers support: ?tickers=AAPL,GOOGL,NVDA
-      const tickerArray = tickers.split(',').map(t => t.trim().toUpperCase()).filter(t => t);
+      const tickerArray = tickers.split(',').map(t => t.trim().toUpperCase()).filter(t => t && t.length <= 10).slice(0, 20);
       if (tickerArray.length > 0) {
         // Use overlaps operator to find articles containing ANY of the specified tickers
         query = query.overlaps('tickers', tickerArray);
