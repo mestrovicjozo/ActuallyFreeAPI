@@ -2,41 +2,62 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { scrollY } = useScroll();
+  const blur = useTransform(scrollY, [0, 80], [12, 24]);
+  const bg = useTransform(scrollY, [0, 80], ['rgba(9,9,11,0.4)', 'rgba(9,9,11,0.78)']);
 
   const links = [
-    { href: '/', label: 'API Docs' },
+    { href: '/', label: 'Docs' },
+    { href: '/#sources', label: 'Sources' },
+    { href: '/#endpoints', label: 'Endpoints' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
-      {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
+    <motion.nav
+      style={{
+        // @ts-expect-error - css var
+        '--nav-blur': blur,
+        backgroundColor: bg,
+      }}
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl"
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent" />
 
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-14">
-          {/* Logo */}
+        <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-md bg-brand flex items-center justify-center">
-              <span className="text-zinc-950 font-heading font-extrabold text-[11px] leading-none">AF</span>
+            <motion.div
+              whileHover={{ rotate: -6, scale: 1.06 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 14 }}
+              className="relative w-8 h-8 rounded-lg bg-brand flex items-center justify-center shadow-[0_0_20px_-6px_rgba(191,217,255,0.55)]"
+            >
+              <span className="text-zinc-950 font-heading font-extrabold text-[12px] leading-none">AF</span>
+              <span className="absolute inset-0 rounded-lg ring-1 ring-inset ring-white/30" />
+            </motion.div>
+            <div className="flex flex-col leading-none">
+              <span className="font-heading font-semibold text-zinc-100 text-sm tracking-tight">
+                ActuallyFreeAPI
+              </span>
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500 mt-0.5">
+                v1 · live
+              </span>
             </div>
-            <span className="font-heading font-semibold text-zinc-100 text-sm tracking-tight">
-              ActuallyFreeAPI
-            </span>
           </Link>
 
-          {/* Nav Links */}
           <div className="flex items-center gap-1">
             {links.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
-                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`nav-underline px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   pathname === href
-                    ? 'text-brand bg-brand/10'
-                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60'
+                    ? 'text-brand'
+                    : 'text-zinc-400 hover:text-zinc-100'
                 }`}
               >
                 {label}
@@ -59,6 +80,6 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
