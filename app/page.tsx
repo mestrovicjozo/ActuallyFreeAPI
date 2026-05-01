@@ -325,8 +325,16 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
             <StaggerItem className="relative pl-6 border-l border-zinc-800/80">
-              <p className="text-stat-xl text-zinc-100">
-                <CountUp value={articleCount} />
+              <p className="text-stat-xl text-zinc-100 min-h-[1em] flex items-center">
+                {loading || articleCount == null ? (
+                  <span className="inline-flex items-center gap-2" aria-label="Loading article count" role="status">
+                    <span className="count-dot" />
+                    <span className="count-dot" style={{ animationDelay: '160ms' }} />
+                    <span className="count-dot" style={{ animationDelay: '320ms' }} />
+                  </span>
+                ) : (
+                  <CountUp value={articleCount} />
+                )}
               </p>
               <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-mono">
                 Articles indexed
